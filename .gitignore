@@ -1,0 +1,54 @@
+# Build outputs
+diagnostics/
+dist/
+__pycache__/
+*.zip
+*.apk
+*.idsig
+
+# ROM binaries live in a checksum-locked Release asset, never in Git/LFS.
+/system/
+*.so
+*.tar.gz
+*.jar
+*.class
+*.dex
+
+# Development tools
+android-sdk/
+erofs-utils/
+payload-dumper-go
+payload-dumper-go_*.tar.gz
+
+# Extracted ROM files
+rom/
+extracted_new/
+
+# Local-only notes and validation helpers
+archive/
+docs/
+scripts/
+tests/
+
+# Python virtual environment
+.venv/
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Debug logs
+*.log
+*.txt
+!lang/*.txt
+!songyuan/design/webui-v1-prompt.txt
+
+# Debug scripts (development only)
+capture_logs_auto.sh
+debug_crash.sh
+debug_runtime.sh
+
+# OS generated
+.DS_Store
+Thumbs.db

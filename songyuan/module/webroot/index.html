@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <title>国行组件</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<div class="shell">
+  <header><div class="eyebrow">SONGYUAN · HYPEROS 3</div><div class="title-line"><h1>国行组件</h1><span class="version" id="version">3.1.0</span></div><p>让熟悉的服务，回到你的手机。</p></header>
+  <main>
+    <section id="components-page" class="page">
+      <div class="summary card"><span class="summary-icon">中</span><div><strong id="summary-title">正在读取组件</strong><p id="summary-sub">正在连接 KernelSU</p></div><span class="status-dot" id="status-dot"></span></div>
+      <div class="notice"><span class="notice-icon">i</span><p><strong>保存后，手动重启生效</strong><br>默认全部启用。关闭时可选择删除或保留国内版文件，个人数据会保留。</p></div>
+      <div class="toolbar"><h2>组件管理 <span id="count"></span></h2><button class="text-button" id="enable-all" disabled>全部启用</button></div>
+      <div id="component-list" aria-busy="true"></div>
+      <div class="footnote">账号、推送、下载器等共享依赖会按需保留；关闭一个组件不会撤掉其他组件需要的依赖。</div>
+    </section>
+    <section id="status-page" class="page" hidden>
+      <h2 class="page-title">运行状态</h2><div class="card info-card" id="runtime-status"></div>
+      <h2 class="section-heading">已集成修复</h2><div class="card info-card"><p>主题商店启动与壁纸下载</p><p>下载器数据库双向迁移，避免回退后软重启</p><p>账号与智能卡组件加载</p><p>相册账号权限与云同步注册</p><p>查找设备定位权限</p><p>国内云备份与国行桌面适配</p><p>NFC 智能卡共享身份迁移</p><small>修复随组件启用；不会自动下载全部云端照片，也不会自动执行云备份恢复。</small></div>
+      <button class="secondary full" id="refresh">刷新状态</button>
+    </section>
+    <section id="help-page" class="page" hidden>
+      <h2 class="page-title">更新与使用说明</h2>
+      <div class="card info-card"><h3>可以在应用商店更新吗？</h3><p>可以尝试同包名、同签名的官方国行更新。更新后仍优先运行国内版，模块的区域与配套修复在启用期间继续生效。</p><p>新版仍需适配当前系统，无法保证所有后续版本均可用。更新异常时，重新安装本模块可恢复配套文件；商店更新包也需要相应回退。</p></div>
+      <div class="card info-card"><h3>核心组件保持配套</h3><p>云服务、账号、推送、NFC 与支付依赖建议使用本模块的同版本组合。请勿从第三方来源混装签名或地区不同的更新。</p></div>
+      <div class="card info-card"><h3>关闭与删除有什么区别？</h3><p>删除：重启后移除该组件的国内版展开文件与商店更新包。保留：文件留在模块私有目录，重启后不再加载，重新启用时可恢复。</p><p>两种方式都保留应用数据备份，不删除照片、短信、账号与卡片数据。只有国际版原本包含的应用才会回到原版；国行专属应用会从应用列表消失。</p><p>模块保留一份压缩安装源，删除文件后也能离线重新启用。数据备份与保留文件仅 Root 可读。</p></div>
+      <div class="card info-card"><h3>为什么云服务包含桌面？</h3><p>国内云备份按桌面包名识别备份。启用云服务会使用配套国行桌面；关闭后回到 POCO 桌面，并迁移当前布局。账号和同步依赖可能仍被相册等组件使用。</p></div>
+      <div class="card info-card"><h3>保存与重启</h3><p>保存前请解锁手机。保存时会准备文件并备份受影响的应用数据；请随后手动重启，避免继续使用待关闭的应用。页面不会自动重启手机。</p><p>智能卡在国际版与国内版之间切换会迁移 UID。安卓密钥与 UID 绑定，部分卡片或认证可能需要重新验证。</p></div>
+      <div class="card info-card"><h3>卸载整个模块</h3><p>先关闭全部组件、保存并手动重启，确认状态为已应用，再停用或卸载模块。直接停用模块会绕过下载数据库、桌面与智能卡的回退流程。</p></div>
+    </section>
+  </main>
+  <div class="save-bar" id="save-bar"><div><strong id="save-title">全部组件已启用</strong><small id="save-sub">修改配置后保存，手动重启生效</small></div><button class="primary" id="save" disabled>保存配置</button></div>
+  <nav aria-label="页面导航"><button data-page="components" class="selected"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="2"/><rect x="14" y="3" width="7" height="7" rx="2"/><rect x="3" y="14" width="7" height="7" rx="2"/><rect x="14" y="14" width="7" height="7" rx="2"/></svg>组件</button><button data-page="status"><svg viewBox="0 0 24 24"><path d="M3 13h4l3-8 4 15 3-7h4"/></svg>状态</button><button data-page="help"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 1 1 4 3c-1 .5-1 1-1 2m0 3h.01"/></svg>说明</button></nav>
+</div>
+<dialog id="detail"><div class="dialog-head"><span class="eyebrow">组件详情</span><button class="close-button" data-close="detail" aria-label="关闭详情">×</button></div><div id="detail-content"></div><button class="primary full" data-close="detail">知道了</button></dialog>
+<dialog id="disable"><div class="dialog-head"><span class="eyebrow">关闭国内化</span><button class="close-button" data-close="disable" aria-label="取消关闭">×</button></div><h2 id="disable-title"></h2><p class="muted">选择如何处理国内版应用文件</p><label class="choice"><input type="radio" name="removal" value="delete" checked><span><strong>删除国内版文件</strong><small>默认选项 · 重启后释放文件占用</small></span><span class="recommended">推荐</span></label><label class="choice"><input type="radio" name="removal" value="keep"><span><strong>保留国内版文件</strong><small>停止加载，方便以后恢复</small></span></label><div class="notice"><span class="notice-icon">i</span><p>两种方式都保留个人数据。保存并手动重启后生效。国际版没有的应用会消失。</p></div><p id="disable-extra" class="footnote"></p><div class="dialog-actions"><button class="secondary" data-close="disable">取消</button><button class="primary" id="confirm-disable">确认关闭</button></div></dialog>
+<dialog id="busy"><div class="spinner"></div><h2>正在保存配置</h2><p class="muted">正在校验组件并备份数据，请稍候。<br>完成后请手动重启手机。</p></dialog>
+<div id="toast" role="status" aria-live="polite" hidden></div>
+</body></html>

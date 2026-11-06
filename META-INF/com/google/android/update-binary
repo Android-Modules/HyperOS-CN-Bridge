@@ -1,0 +1,28 @@
+#!/sbin/sh
+
+umask 022
+
+ui_print() { echo "$1"; }
+
+require_module_installer() {
+  ui_print "HyperOS3 EU Localization is a Magisk-compatible root-module zip."
+  ui_print "Install it from a Magisk, KernelSU, or APatch bootmode module manager so customize.sh can run."
+  exit 1
+}
+
+OUTFD=$2
+ZIPFILE=$3
+
+if ! command -v install_module >/dev/null 2>&1; then
+  mount /data 2>/dev/null
+  if [ -f /data/adb/magisk/util_functions.sh ]; then
+    . /data/adb/magisk/util_functions.sh
+  fi
+fi
+
+if ! command -v install_module >/dev/null 2>&1; then
+  require_module_installer
+fi
+
+install_module
+exit 0

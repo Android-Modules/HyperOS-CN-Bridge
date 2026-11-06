@@ -1,0 +1,711 @@
+{
+  "schema": 1,
+  "repository": "Android-Modules/HyperOS-CN-Bridge",
+  "release": "rom-songyuan-OS3.0.306.0",
+  "asset": "songyuan-rom-inputs.tar.gz",
+  "source": "OS3.0.306.0.WGNCNXM",
+  "target": "OS3.0.306.0.WGNMIXM",
+  "sha256": "3c4d38b7761f2cecdfdb1564a362f1b081b0a3fedacd5f78ed66073b696fc853",
+  "files": {
+    "cn/app/AiasstVision/AiasstVision.apk": {
+      "sha256": "0c9e54a776fc6d70e7e19719afe3993695f2ece27f8395d9300597913ad926c5",
+      "size": 46879587
+    },
+    "cn/app/ContentCatcherOS3_1/ContentCatcherOS3_1.apk": {
+      "sha256": "cb6a4388f7d9f868b05d4615742485ef76f0f1f08dd1d8758ea18a8ee8ebd220",
+      "size": 140301
+    },
+    "cn/app/HybridPlatform/HybridPlatform.apk": {
+      "sha256": "3c754f9707105d7885bf3763c8bb90b489d0df3da1a75f0746a8884970a1da41",
+      "size": 64576755
+    },
+    "cn/app/MINextpay/MINextpay.apk": {
+      "sha256": "57259a08f8936aeb023c47b93afbcb725783619240adf49ebe6ab446c0e2e5a1",
+      "size": 13727661
+    },
+    "cn/app/MITSMClient/MITSMClient.apk": {
+      "sha256": "aa040b4f1f8480599695776a55f10894413ede77d045194b5f46c827bbd09b5a",
+      "size": 31505622
+    },
+    "cn/app/MIUIAiasstService/MIUIAiasstService.apk": {
+      "sha256": "e57d88aa01027d4af367bd95f04993ec90de4aa223a094367c944ccd499c4f78",
+      "size": 23646032
+    },
+    "cn/app/MIUICloudService/MIUICloudService.apk": {
+      "sha256": "9ed468dbc697fdb03e96b181233ff4e6a18a625c8c9b7db2553945946df08270",
+      "size": 13662769
+    },
+    "cn/app/MIUIMiCloudSync/MIUIMiCloudSync.apk": {
+      "sha256": "0a98b3eb40a539f650cd7bd173dc941836c52f5c2290b9f74a591a4f041f1981",
+      "size": 1007428
+    },
+    "cn/app/MIUISuperMarket/MIUISuperMarket.apk": {
+      "sha256": "8ebb3096f1e8c47680d4c73f722393481085fa21a6ef4ffcfa38514cd9740ddc",
+      "size": 59432000
+    },
+    "cn/app/MIUIThemeManager/MIUIThemeManager.apk": {
+      "sha256": "a583b52054aa7f1cd3292e38b2387f650031c670a58adc8dc82c009fcd4cd776",
+      "size": 72829550
+    },
+    "cn/app/MIUIXiaomiAccount/MIUIXiaomiAccount.apk": {
+      "sha256": "22b716590868a322154307ef3d88392aeb437d784d2750234a9adab392833b24",
+      "size": 18855177
+    },
+    "cn/app/PaymentService/PaymentService.apk": {
+      "sha256": "ad951df8ca6c5f78edb52246c8c95d8e294bd101744d7c260079123fab2bb70d",
+      "size": 24938254
+    },
+    "cn/app/UPTsmService/UPTsmService.apk": {
+      "sha256": "ac52313450813ab118bd291013e6094b1db3c86468a5899343b4135b40b80c83",
+      "size": 24079202
+    },
+    "cn/app/VoiceAssistAndroidT/VoiceAssistAndroidT.apk": {
+      "sha256": "0ae3948ba295cf16ac3342634d15a1b0c6da2c91e91f57995458ef71099d6d32",
+      "size": 166937897
+    },
+    "cn/app/VoiceTrigger/VoiceTrigger.apk": {
+      "sha256": "5c7ad0c3b26be5ea31c1a3333a40a2dbd371fbb1ab1d1c99e52d2fd8aa2e138d",
+      "size": 42688806
+    },
+    "cn/app/XiaomiSimActivateServiceCn/XiaomiSimActivateServiceCn.apk": {
+      "sha256": "5b48fb41fd675acc62bb0df1940a7d7436edc668959be0b934105ad411908d45",
+      "size": 8881507
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/auth-master.apk": {
+      "sha256": "3a48473e64be1a8ad6d66f6e134c241467c1047219d25ebbe7cc3069d1f896da",
+      "size": 65943
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/auth-xxhdpi.apk": {
+      "sha256": "54e6ba2e8fac55065945b7ae58a72cee443ff1688f6c5284feeb579f16e367cf",
+      "size": 8542
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/prefetch-master.apk": {
+      "sha256": "72c45562a57ceb01c96999bd451fa58fecd983b6ca6430a3b8041a0c4e8f507f",
+      "size": 57751
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/prefetch-xxhdpi.apk": {
+      "sha256": "0c2ac599862dd5ebffe9cdc0cafa8e319d646de50b41469a5c985a26af9aee84",
+      "size": 8542
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/screen_recorder-master.apk": {
+      "sha256": "d2cb592f7398c20fe5723d7c3beff85ab91b1b79644b6e67cdc87128e86ba544",
+      "size": 61847
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/screen_recorder-xxhdpi.apk": {
+      "sha256": "2ec7500b051f36047a047c8b50e2fc22c3779192381163a5ffe98d67e932abee",
+      "size": 8542
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/split-XiaomiServiceFrameworkCN-arm64_v8a.apk": {
+      "sha256": "1fb7e6d4fe8d39b0af90990a60aac4d0c4fd74ca1ee4b6c9468593f8e3201adf",
+      "size": 243710
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/split-XiaomiServiceFrameworkCN-master.apk": {
+      "sha256": "433b0facd6b46c61e798b2986e7357ab72cb32cbd976565ab18369d17ba89d37",
+      "size": 6870719
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/split-XiaomiServiceFrameworkCN-xxhdpi.apk": {
+      "sha256": "4d48939cf9b5fb5d0b47664bae560a641fafb3361ddb2e23016107512c7cc69d",
+      "size": 112399
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/uninstall_relogin-master.apk": {
+      "sha256": "3c24dee6eb489919b651b1b3f6ae9d34980faed1637b44091d9a2d869a4aaac4",
+      "size": 33175
+    },
+    "cn/app/split-XiaomiServiceFrameworkCN/uninstall_relogin-xxhdpi.apk": {
+      "sha256": "54a719a20b2a80b6ab8fc2d05121c6ea42286d16cd1f28bf1974ca89df9386d0",
+      "size": 8542
+    },
+    "cn/data-app/HyperGalleryPluginCn/HyperGalleryPluginCn.apk": {
+      "sha256": "33cf1fb92941d1c8ddca963aa6f459434c6cedc2408eb2e159303636deecf259",
+      "size": 24847755
+    },
+    "cn/data-app/MIUICalendar/MIUICalendar.apk": {
+      "sha256": "13d88ab19014b6320060c79cb6bd2ec349760b94a97f788b73498b80bbafd378",
+      "size": 17326837
+    },
+    "cn/data-app/MIUIDeskClock/MIUIDeskClock.apk": {
+      "sha256": "a3d1bbe4ccdef161ea9cf857707b5c2cc95d61890152252aaf795a1cb7b46943",
+      "size": 17229581
+    },
+    "cn/data-app/MIUIGallery/MIUIGallery.apk": {
+      "sha256": "ce41b2399f6eda428051ec5749ec0f24635611b375f55544927d781fbd56a363",
+      "size": 131053044
+    },
+    "cn/data-app/MIUIThemeStore/MIUIThemeStore.apk": {
+      "sha256": "620a67f8d1de622c9ff3baf633a3f17db2515516c488000c88429a68243647ae",
+      "size": 1592866
+    },
+    "cn/data-app/MIpay/MIpay.apk": {
+      "sha256": "f428fe22d7b426512d876af7e61c5abaca4e29a9a8e01fc2caa0d15fe8516468",
+      "size": 112543744
+    },
+    "cn/etc/permissions/RemoteSimlock.xml": {
+      "sha256": "6a628fda8f62ec4baf7b0cc153bee8b7da076e27c4859150cf67a2113c1dbb7a",
+      "size": 355
+    },
+    "cn/etc/permissions/RemoteSimlockManager.xml": {
+      "sha256": "a5f1438262c59fce43aefd08a3ffc9c1827a4126e6f60295cb7f1edee53b2816",
+      "size": 449
+    },
+    "cn/etc/permissions/UimGba.xml": {
+      "sha256": "137a7d3bbf496f19b63571517329edc8c5575a5238c272a55c5f04720102c31c",
+      "size": 327
+    },
+    "cn/etc/permissions/UimGbaManager.xml": {
+      "sha256": "5bb9e15ddd1462e19f80f95025137b8141227dd1e09ceb53ce4c06c7d7819508",
+      "size": 403
+    },
+    "cn/etc/permissions/UimService.xml": {
+      "sha256": "a58cd0fa2cf73fe082bd62987fe5a94377d2ec54db6600a253f818da121a3edc",
+      "size": 387
+    },
+    "cn/etc/permissions/cn.google.services.xml": {
+      "sha256": "3f9c09dc1e73783e7960876bdfe19a64f97f0a388f3509db6d055e001f001004",
+      "size": 265
+    },
+    "cn/etc/permissions/com.android.imsserviceentitlement.xml": {
+      "sha256": "87d0208385f62ae7e16a0bcd7839996a293d1cefe0ef1ed4b6a7dab5136d3aba",
+      "size": 944
+    },
+    "cn/etc/permissions/com.android.settings.intelligence.xml": {
+      "sha256": "cb076b195cb1cc75b3c3f7b897fec79d33d7e5dfc305c0d920289123b1024144",
+      "size": 1083
+    },
+    "cn/etc/permissions/com.qti.snapdragon.sdk.display.xml": {
+      "sha256": "8c2791fbc4c7044b0987bebaddd4e2789cd36b53ca03feb9811a2423e07f3341",
+      "size": 548
+    },
+    "cn/etc/permissions/extphonelib_product.xml": {
+      "sha256": "7684e49d9927bd57c9be6eb75d9ad5d30bfc84b3e992f9abc23758964f2a0468",
+      "size": 1708
+    },
+    "cn/etc/permissions/features_com.android.virt.xml": {
+      "sha256": "af1247a68776575df1e1c126ae146597cabc5630a8df9b255bdd7af85faeffd0",
+      "size": 770
+    },
+    "cn/etc/permissions/ims_ext_common.xml": {
+      "sha256": "2d0231984a8b68c24f312f5b3ee227354e5cc706371476eff5cf67d892e8c3c0",
+      "size": 1675
+    },
+    "cn/etc/permissions/lpa.xml": {
+      "sha256": "ba92e2bba470ce8ed0dd38c23edce525c3fc7ea7451ab75adda1255dba7c976c",
+      "size": 325
+    },
+    "cn/etc/permissions/privapp-permissions-gms-cn-product.xml": {
+      "sha256": "9ee3fc96d6ec085c96456c3116fde07693c96700799708272903ceced19e6db7",
+      "size": 12829
+    },
+    "cn/etc/permissions/privapp-permissions-miui-product.xml": {
+      "sha256": "557b410463c29bee010385d4655973cb698d18edb51ec3c3685325070b7e5d8c",
+      "size": 1898
+    },
+    "cn/etc/permissions/privapp-permissions-product.xml": {
+      "sha256": "0e38a538d01e17876d2ce79ad081d4d684ffa9f208cfca2f4e4910231f3d4da5",
+      "size": 21197
+    },
+    "cn/etc/permissions/qti_telephony_hidl_wrapper_prd.xml": {
+      "sha256": "95380e79e973ffff35bf5c590e717f917435aaa118111d98128261c352c14c20",
+      "size": 1709
+    },
+    "cn/etc/permissions/qti_telephony_utils_prd.xml": {
+      "sha256": "a755c7def0b0673cad113e36d06fae0708ec08f4c609ffb8c243786aae0b0d88",
+      "size": 1693
+    },
+    "cn/etc/permissions/split-permissions-google.xml": {
+      "sha256": "259cae2124ee93641d38812f0d25b62785d40ad514f78faad45473a984aad8dd",
+      "size": 288
+    },
+    "cn/etc/permissions/telephony_product_privapp-permissions-qti.xml": {
+      "sha256": "9921d90257c6f721f01627660b94992ffe1642af40abec900a3c044ecb00e8fe",
+      "size": 1311
+    },
+    "cn/etc/permissions/vendor.qti.hardware.data.connection-V1.0-java.xml": {
+      "sha256": "e7348251d6b120b9daad9ba1bf2ff09b63c16cbf6e20eb5cf827820468a55b77",
+      "size": 385
+    },
+    "cn/etc/permissions/vendor.qti.hardware.data.connection-V1.1-java.xml": {
+      "sha256": "723ff9e69ca971ffc4e6540b82274cfa481eedcf424b69052319d45a5b0002fa",
+      "size": 380
+    },
+    "cn/etc/permissions/vendor.qti.hardware.data.connectionaidl-V1-java.xml": {
+      "sha256": "1f1aabcee2403f5aa2892352704ef15f1d4c617daa07da3ddd68a257cd0586cb",
+      "size": 384
+    },
+    "cn/priv-app/MIUICloudBackup/MIUICloudBackup.apk": {
+      "sha256": "9cd5fc3308b344a7df827267f33aafc6a65541ea7f7e2d07177a6dc0ba8ea59a",
+      "size": 5966977
+    },
+    "cn/priv-app/MIUIContentExtension/MIUIContentExtension.apk": {
+      "sha256": "6c7decab9c3a09f658d6159de4cc4f77c6fa8b10bd08a3adc9e49e5fcd6e5670",
+      "size": 9557091
+    },
+    "cn/priv-app/MIUIPersonalAssistantPhoneOS3/MIUIPersonalAssistantPhoneOS3.apk": {
+      "sha256": "eba401614241ce17897bf028eaf20cde4698bf3a9a958c5ad41c6367b1e66625",
+      "size": 23663656
+    },
+    "cn/priv-app/MIUIYellowPage/MIUIYellowPage.apk": {
+      "sha256": "b43cfc280de14e9b821520f68450e07b4b4aa911c20d610b64c1ffa9e7790d95",
+      "size": 6433303
+    },
+    "cn/priv-app/MiuiHome/MiuiHome.apk": {
+      "sha256": "31f6dadfa501253ef618879f9796dc0d0b4666905f79b476526b36bfe0ea4e05",
+      "size": 25467354
+    },
+    "cn/priv-app/MiuiMms/MiuiMms.apk": {
+      "sha256": "74de54013abe0ae79a0162b29e2d708387d458f16f96637122dd27510a4d2167",
+      "size": 19482067
+    },
+    "cn/system/etc/permissions/CellBroadcastServiceModulePlatform.xml": {
+      "sha256": "2a4bf8f65cf400a05fe5f728fdf1dc9588256133c70c5a731f9423e7d66b06ac",
+      "size": 1018
+    },
+    "cn/system/etc/permissions/GoogleDocumentsUIMiuiCn_permissions.xml": {
+      "sha256": "fd470308df4abf137a4bc83386dbd9528c13ffdbd8d20e95cd309ab4c1a21e99",
+      "size": 1313
+    },
+    "cn/system/etc/permissions/android.software.credentials.xml": {
+      "sha256": "d2e9c5bd64d53c88b14497fcaa25392097b288017fb7b46038fed88838145728",
+      "size": 752
+    },
+    "cn/system/etc/permissions/android.software.live_wallpaper.xml": {
+      "sha256": "055df9cecfb48a0d39dd572f695db812d032d81f68c83e76a8bab16b274caf7a",
+      "size": 1050
+    },
+    "cn/system/etc/permissions/android.software.webview.xml": {
+      "sha256": "2e293ff6ea02063ea3835e42e7a5c17fc5a15a46fff0af486c19dcb5b92fe821",
+      "size": 748
+    },
+    "cn/system/etc/permissions/android.software.window_magnification.xml": {
+      "sha256": "b3e89beac4f407f1b3acef0788fb6829993a24e0c3035e0e6e00fc266fe92dbd",
+      "size": 895
+    },
+    "cn/system/etc/permissions/android.test.base.xml": {
+      "sha256": "449eb0b5787d87d8abfaf3a3d00b6b7c908c043ccb9c8120c231ca2fbc7722bc",
+      "size": 797
+    },
+    "cn/system/etc/permissions/android.test.mock.xml": {
+      "sha256": "58303c4148747f0cdbb6d45445d55fbdf93b99818403ef71ddaf3c79ef29c964",
+      "size": 797
+    },
+    "cn/system/etc/permissions/android.test.runner.xml": {
+      "sha256": "c388d758b7405b8dcbaafd459a57c9f5b403f0bb3227028842e8453c9d21cdee",
+      "size": 801
+    },
+    "cn/system/etc/permissions/com.android.future.usb.accessory.xml": {
+      "sha256": "41a19713a08483fd81f5611456c8868c6e631b2fcadbfff435098f5ee3372159",
+      "size": 827
+    },
+    "cn/system/etc/permissions/com.android.intentresolver.xml": {
+      "sha256": "866f730bf08e562c55f583eb1066ce13d36383aecdbc852ccd226a18961c63ab",
+      "size": 1199
+    },
+    "cn/system/etc/permissions/com.android.location.provider.xml": {
+      "sha256": "4ec4ab50c51a27a1be9d2dbe9209f35e86a0af73716aef89ff48158c5a6e338d",
+      "size": 821
+    },
+    "cn/system/etc/permissions/com.android.media.remotedisplay.xml": {
+      "sha256": "0aa455a4959424c5d4c568b5df06f529e7496a4df723b45024522fa2ed2ba48d",
+      "size": 825
+    },
+    "cn/system/etc/permissions/com.android.mediadrm.signer.xml": {
+      "sha256": "bf033af8111f75db7ab6ccfc4bb93dc89b15636e8add6048bdf234059cbe7fb8",
+      "size": 817
+    },
+    "cn/system/etc/permissions/com.android.networkstack.xml": {
+      "sha256": "28b9855a457e416aa51dedcd22edc1eacb1d04286adeb45cf3852a2e7044846e",
+      "size": 2064
+    },
+    "cn/system/etc/permissions/com.android.nfc_extras.xml": {
+      "sha256": "dc7cf40870a1f652ab1068d65973ba2ad7c06ebe06baccb9fd662182b56813c4",
+      "size": 807
+    },
+    "cn/system/etc/permissions/com.wapi.wapicertstore.xml": {
+      "sha256": "3485ed5c0f527b8f49d285859fc832bedb1eb6e47de7e3b3a06063c9919fb75d",
+      "size": 313
+    },
+    "cn/system/etc/permissions/javax.obex.xml": {
+      "sha256": "81c400bb23b9345d46a7c51b011bdfcfdeafbd6b60d4c0f2caafcff644f06916",
+      "size": 783
+    },
+    "cn/system/etc/permissions/org.apache.http.legacy.xml": {
+      "sha256": "708e3464888f4211456eea7b80d9a6f134628e47c2b8a92a850277cbdee123d2",
+      "size": 807
+    },
+    "cn/system/etc/permissions/platform.xml": {
+      "sha256": "fd734ebf1aac0636aedbbb2b638a30f64e101073379bd7c47c9ce77ace12bde5",
+      "size": 19586
+    },
+    "cn/system/etc/permissions/privapp-permissions-miui-system.xml": {
+      "sha256": "f3a3af9106f9b06874d380b772d6dc58815a552816f56e72ba01eae6e2eab1eb",
+      "size": 7387
+    },
+    "cn/system/etc/permissions/privapp-permissions-platform.xml": {
+      "sha256": "b36ccddf0d6bad08bd2163ff24195b22860d0fbaa8de63d4898af0e08a3798d3",
+      "size": 45097
+    },
+    "cn/system/etc/permissions/privapp-permissions-qti.xml": {
+      "sha256": "243f5fc524026ec578114fd370396bf4706ae61a637eda7d2ac1bbb73d8e401b",
+      "size": 4339
+    },
+    "cn/system/etc/permissions/signature-permissions-miui-system.xml": {
+      "sha256": "065ea8950de2dc5a50a764a1811a0ffa57d07d2a5a6cc8b9fb5eeb529abe55ce",
+      "size": 1853
+    },
+    "cn/system/etc/permissions/system-permissions-xiaomi.xml": {
+      "sha256": "322728bae88cfac4190dae5310628ce99b3335b7d94625d46e906fd2ceb28943",
+      "size": 286
+    },
+    "cn/system/etc/permissions/uimremoteclient.xml": {
+      "sha256": "51e59df550ea01f59e7ff83135b1e6dd25970978e4c14e5b2a57d523617e8c84",
+      "size": 328
+    },
+    "cn/system/etc/permissions/uimremoteserver.xml": {
+      "sha256": "37b87531ba2b2950bd6c3e784b45dcd01aab75758914b2a81bb5d2c6b3323116",
+      "size": 329
+    },
+    "cn/system/lib64/libdownload.so": {
+      "sha256": "874b4135cba324ceaed75466686cdc4e4d4f8a31e750f1cd1d8b41d1f4b7c5c1",
+      "size": 182328
+    },
+    "cn/system/lib64/libvip_channel.so": {
+      "sha256": "fad3158040a0faddc9884d813f12fb57aad2096ecc1e4b216c9f99b9375d34de",
+      "size": 2138024
+    },
+    "cn/system/lib64/libxl_stat.so": {
+      "sha256": "3f9c4b0b18e29c958ea54a3b116700938131f31e0ba84345d683be437428b682",
+      "size": 841960
+    },
+    "cn/system/lib64/libxl_thunder_sdk.so": {
+      "sha256": "611c738d86a3d07838e685cdde7d8195478ceb89610e6e985fd479b052eaf68e",
+      "size": 6393928
+    },
+    "cn/system/priv-app/DownloadProvider/DownloadProvider.apk": {
+      "sha256": "237022d2cf6ffbd1f306423dd814e9df5cfa1a655c899169a929ad454d15c533",
+      "size": 10384423
+    },
+    "cn/system_ext/etc/permissions/CellBroadcastAppPlatform.xml": {
+      "sha256": "bcc4c7166d0d28570548de9b4951be146060826ec04cbdc036029b4456fafcdb",
+      "size": 1441
+    },
+    "cn/system_ext/etc/permissions/StNfcExtensionService.xml": {
+      "sha256": "b441c518413ec37e3384ad0e8f83537bf6e3dfc62ff27ceded8e03735c9ac7ab",
+      "size": 1012
+    },
+    "cn/system_ext/etc/permissions/android.hardware.telephony.gsm.xml": {
+      "sha256": "eb4e03a14d2004e88bc55072780b9996bce93c96db8ce2465e755f3749c4a145",
+      "size": 1224
+    },
+    "cn/system_ext/etc/permissions/android.hardware.telephony.ims.xml": {
+      "sha256": "6f0d8f1e1dc0657e39ff63129b1633fdd9971417dcc9982271f089024666dadd",
+      "size": 821
+    },
+    "cn/system_ext/etc/permissions/android.software.credentials.xml": {
+      "sha256": "d2e9c5bd64d53c88b14497fcaa25392097b288017fb7b46038fed88838145728",
+      "size": 752
+    },
+    "cn/system_ext/etc/permissions/android.software.verified_boot.xml": {
+      "sha256": "a9d903b0239520d91fc9a525361944d8022ec9b4cd39361a821ba63390d7890f",
+      "size": 753
+    },
+    "cn/system_ext/etc/permissions/androidx.window.extensions.xml": {
+      "sha256": "e649efa502e3b67e894c5aded59b1b2de4dad4e1303f0d3e7fae29fe4a43b9ac",
+      "size": 830
+    },
+    "cn/system_ext/etc/permissions/androidx.window.sidecar.xml": {
+      "sha256": "2ff1b4ad3a4f54659bc6a30a7026fe8b6a90b09e6723988ca0aff261944a8e89",
+      "size": 824
+    },
+    "cn/system_ext/etc/permissions/appfunctions.extension.xml": {
+      "sha256": "984a00c22113937e4a5a5f23d04100b4bf95f3353ff2a07885f52dc06598ef0a",
+      "size": 847
+    },
+    "cn/system_ext/etc/permissions/audiosphere.xml": {
+      "sha256": "29da8a24c50a0087f3fec99a7f7fddc6377b02c049dcca044b8fd04e94efab47",
+      "size": 352
+    },
+    "cn/system_ext/etc/permissions/com.android.carrierconfig.xml": {
+      "sha256": "248978a11956f56667e3b4708603c811defa4eea2e069a7459d03473fbb2ea95",
+      "size": 869
+    },
+    "cn/system_ext/etc/permissions/com.android.emergency.xml": {
+      "sha256": "c3c967d81eaee7095e46944d52e98033abc84ea16e56d28c744c37423c5cf096",
+      "size": 1352
+    },
+    "cn/system_ext/etc/permissions/com.android.extensions.appfunctions.xml": {
+      "sha256": "765622459ec7c8718eb1277944f2b678cc6ee75d626dc9d4e9bf25836e43827c",
+      "size": 837
+    },
+    "cn/system_ext/etc/permissions/com.android.hotwordenrollment.common.util.xml": {
+      "sha256": "8d962466733e9c7b44d65f0a4ea86c48ffa29490bc67dfceac7a44e3a8eeaa10",
+      "size": 849
+    },
+    "cn/system_ext/etc/permissions/com.android.provision.xml": {
+      "sha256": "84acd1e425b17d5a0368b49eb21b1785d058b06a9f5509ae31568e603007d4a5",
+      "size": 998
+    },
+    "cn/system_ext/etc/permissions/com.android.settings.xml": {
+      "sha256": "c4ebc506d249797444b6b447777c606384980b255488e507cf2199e134956684",
+      "size": 4674
+    },
+    "cn/system_ext/etc/permissions/com.android.settingslib.search.xml": {
+      "sha256": "cb0c708e61a6551e0393ae2c48bb9fd311471ed6681697fe40861e5ac35a216e",
+      "size": 242
+    },
+    "cn/system_ext/etc/permissions/com.android.statementservice.xml": {
+      "sha256": "45eaa72fb7ce52f13c973849e907f73260bad21e7661016ac224fdb209a1b930",
+      "size": 1021
+    },
+    "cn/system_ext/etc/permissions/com.android.storagemanager.xml": {
+      "sha256": "4258f90f65190a6cded85ba2d4f06234084f7c85c9b8563289dc5af66e05add0",
+      "size": 1265
+    },
+    "cn/system_ext/etc/permissions/com.android.systemui.libpag.xml": {
+      "sha256": "85159306df030f15fc842ccf6c14acd7f6489c2f8198a5a711b4d41b3b024085",
+      "size": 237
+    },
+    "cn/system_ext/etc/permissions/com.android.systemui.xml": {
+      "sha256": "e048f444ace2cecaadf7d57a805efc376f87cf5ad701114d642f6ebc16e4f659",
+      "size": 7169
+    },
+    "cn/system_ext/etc/permissions/com.nxp.nfc.nq.xml": {
+      "sha256": "b4b36c9c0b7efb9a60cc8e3779cd92c3c5527643db00e21dbe74dd2e9bf42ca9",
+      "size": 289
+    },
+    "cn/system_ext/etc/permissions/com.nxp.nfc.xml": {
+      "sha256": "870baab91f9eea885f9b6238341a6a1da8336964a7b5f45f541cd1ffa077004b",
+      "size": 284
+    },
+    "cn/system_ext/etc/permissions/com.qti.dpmframework.xml": {
+      "sha256": "f0f06e0ffbe31064be2639ca338f0f944df96835e934ba60778a62d6ef9142c9",
+      "size": 559
+    },
+    "cn/system_ext/etc/permissions/com.qti.location.sdk.xml": {
+      "sha256": "101ed3492b33b1682092fcc64bdad11e870a0e426eecb46cbd0d9adf0d1ff209",
+      "size": 682
+    },
+    "cn/system_ext/etc/permissions/com.qti.media.secureprocessor.xml": {
+      "sha256": "92b03ae9add44669ba69767cf88fbe986203d7692257e85b203854154d92e543",
+      "size": 335
+    },
+    "cn/system_ext/etc/permissions/com.qti.qcc.vendor_qcc.xml": {
+      "sha256": "e53f1f4a505c44741dd6e9cc588c4401c82c6f868c0c1ba0f8b3f870c2ef21a5",
+      "size": 337
+    },
+    "cn/system_ext/etc/permissions/com.qualcomm.location.xml": {
+      "sha256": "5b45afda6071348e0fb7b5d60f702fc00431f7197c42485966ec90924f854eae",
+      "size": 744
+    },
+    "cn/system_ext/etc/permissions/com.qualcomm.qmapbridge.xml": {
+      "sha256": "819aeee076112b8a5dd14aa39dc234cf4be3ad54341ee79e25ec52dc020029b1",
+      "size": 913
+    },
+    "cn/system_ext/etc/permissions/com.qualcomm.qti.VENDORSSGTZD.xml": {
+      "sha256": "26cc7d53487e2cfb84bba07621ec6623fb379a7ee20c4e525a7794b86e46ce8c",
+      "size": 539
+    },
+    "cn/system_ext/etc/permissions/com.qualcomm.qti.imscmservice-V2.0-java.xml": {
+      "sha256": "9a9fba139afa1c8f2fe4dd8b9defe1e9802264a37f0a02aebd5291f2e3d7674e",
+      "size": 376
+    },
+    "cn/system_ext/etc/permissions/com.qualcomm.qti.imscmservice-V2.1-java.xml": {
+      "sha256": "f5953f5561d123bfe30b5b2f3e8bb81decc263e1f8b05c21606bd24e3f36b2b4",
+      "size": 366
+    },
+    "cn/system_ext/etc/permissions/com.qualcomm.qti.imscmservice-V2.2-java.xml": {
+      "sha256": "73cc3466c2d4e9558674ade3d8f703c86fb3764a2e4a4f7481bd1514f27f282e",
+      "size": 366
+    },
+    "cn/system_ext/etc/permissions/com.qualcomm.qti.izattools.xml": {
+      "sha256": "e26061e61623860588a9388108ae67f55eb422d87e6c27fe327ac9c6f403a84d",
+      "size": 542
+    },
+    "cn/system_ext/etc/permissions/com.st.android.nfc_extensions.xml": {
+      "sha256": "dd63f1a776c1eab2d72d967f7cdd06e1eb961d50ad73ac1186b55d5f44ead250",
+      "size": 203
+    },
+    "cn/system_ext/etc/permissions/com.st.android.nfc_extensions_16.xml": {
+      "sha256": "98c4518cf1e55edbc939b199008ebdcb0fecc581c0f41be64e4de550ca6c2dfa",
+      "size": 214
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.NetworkBoost.xml": {
+      "sha256": "99ede0fd69df45278d92527e6ae92701a8237842bae4fb9b8d16234129de6716",
+      "size": 247
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.hardware.camera.companion.xml": {
+      "sha256": "7f8be37f7a76c1a2311c26362716612fefe4a2ebac41a2b13fe410f4a2044ca1",
+      "size": 335
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.hypercomm.xml": {
+      "sha256": "4c79d340024e3204d20c8534ce1f53709711a535515c845a8a9aef0916e1bec0",
+      "size": 231
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.nfc.xml": {
+      "sha256": "6080bca4bba7a810f72e30fb03d873babce3f488bd67441aa78742ab40c95147",
+      "size": 290
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.okhttp.xml": {
+      "sha256": "75d81ffca2bfc6bcdaad194d835a5a8a585a7771c88a61d20fc3ed822228484c",
+      "size": 343
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.org.conscrypt.xml": {
+      "sha256": "f726c54fcd3959631683c51c03e1814517f3446c645d6b1544ca0eafa6f2a9a8",
+      "size": 302
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.phone.xml": {
+      "sha256": "699065f77bc7f0716ea4990598d53bf48240b5be381a4bb533b7e74cc9deabec",
+      "size": 641
+    },
+    "cn/system_ext/etc/permissions/com.xiaomi.slalib.xml": {
+      "sha256": "33545a53d8e69067c1b57f49c058bd715a52df9d5a3ada02c96032e61817b928",
+      "size": 235
+    },
+    "cn/system_ext/etc/permissions/datachannellib.xml": {
+      "sha256": "f0eb9775d265473c53fb6e6a6cb86219c22bfef5f3c146c4a952e6d82645665b",
+      "size": 302
+    },
+    "cn/system_ext/etc/permissions/dpmapi.xml": {
+      "sha256": "0bf8828848835c7dc65a3566ecfa65177c9ec61fcaaec0a03e964bcb435225dc",
+      "size": 305
+    },
+    "cn/system_ext/etc/permissions/embms-noship_product_privapp_permissions_qti.xml": {
+      "sha256": "048828dee843fd53cd5432aca6012ee8ecac07b3a35f850c4d45b69465c7f52c",
+      "size": 1381
+    },
+    "cn/system_ext/etc/permissions/extphonelib.xml": {
+      "sha256": "378892e6d1dccb6228c81229ec424867f10b29c695d220a42a9565b015ce6308",
+      "size": 1695
+    },
+    "cn/system_ext/etc/permissions/miui-cameraopt.xml": {
+      "sha256": "5088b9b19d251e3a2c24ce435c02a3c4f0fd6ce3d81a68d1a6c1c435598c2371",
+      "size": 797
+    },
+    "cn/system_ext/etc/permissions/package-shareduid-allowlist-miui-system-ext.xml": {
+      "sha256": "baaf6122ef0907bfcf2137b46dde5bea12c0db2f119255c76c37c9f89c735d7a",
+      "size": 2425
+    },
+    "cn/system_ext/etc/permissions/platform-miui.xml": {
+      "sha256": "96da583654521934b27e6a4ce4eba994fa709a20864cd5117338bf1537a488d6",
+      "size": 2597
+    },
+    "cn/system_ext/etc/permissions/privapp-permission-xpan.xml": {
+      "sha256": "a4034aafce4313e644883804a13b5b25ea6d40e98b0bc03bcae5b80502b4f50d",
+      "size": 1812
+    },
+    "cn/system_ext/etc/permissions/privapp-permissions-aptxui.xml": {
+      "sha256": "60235dc80c0ac7dd79ca1ce79c3690c2f38fb07ae310736bffe2b7056d0f96cd",
+      "size": 556
+    },
+    "cn/system_ext/etc/permissions/privapp-permissions-com.qualcomm.location.xml": {
+      "sha256": "2cc696664071a19b189ce7810f878e889d51aeef9f2aba37456646509da7d69d",
+      "size": 1263
+    },
+    "cn/system_ext/etc/permissions/privapp-permissions-com.xiaomi.polaris.xml": {
+      "sha256": "26634c4c395d48b96dc3928ae497389e7e2d52bf4328595f552239d70af5d5f5",
+      "size": 265
+    },
+    "cn/system_ext/etc/permissions/privapp-permissions-gms-cn-system-ext.xml": {
+      "sha256": "6fb1ebb3c38e810dda27d881cf0011c11aace5d2b9f2349ea4b0e6182098ba71",
+      "size": 1518
+    },
+    "cn/system_ext/etc/permissions/privapp-permissions-miui-system-ext.xml": {
+      "sha256": "f13faedb8afed73e671b90f8164a141adeec2a91e320a22128997b39ec09182d",
+      "size": 11065
+    },
+    "cn/system_ext/etc/permissions/privapp-permissions-qti-system-ext.xml": {
+      "sha256": "c8ca2bc33c017940df09ad755f3602a8ada4693c1db518901285a9c2d0a99bac",
+      "size": 1722
+    },
+    "cn/system_ext/etc/permissions/privapp_allowlist_com.xiaomi.bluetooth.xml": {
+      "sha256": "590b087b19b3c105020e11174419950b32d0701ddad001962c730af398ac3886",
+      "size": 357
+    },
+    "cn/system_ext/etc/permissions/qcrilhook.xml": {
+      "sha256": "30f2d18283025a215e823cd286a89673280077791d22ce5ccabcbb5a6e71bf5f",
+      "size": 234
+    },
+    "cn/system_ext/etc/permissions/qti_libpermissions.xml": {
+      "sha256": "78b94d836339b46d88b6aec68f49fa009dc4be3b9836d82b1417c1437e7169a0",
+      "size": 341
+    },
+    "cn/system_ext/etc/permissions/qti_permissions.xml": {
+      "sha256": "888a73574ad91867ad2b0f6b48fddf0a98d2b9aebaa3fa6f0760c1d3970836c8",
+      "size": 400
+    },
+    "cn/system_ext/etc/permissions/qti_telephony_hidl_wrapper.xml": {
+      "sha256": "9c77a1f474bec0104854e92fcbeef3b03640cb2491bd5bb3355c937a41e0c0ce",
+      "size": 1704
+    },
+    "cn/system_ext/etc/permissions/qti_telephony_utils.xml": {
+      "sha256": "e7d6f08e08a293c14c5f810ae3cd3c36ab1ef798605de663617476bb90b424ac",
+      "size": 1688
+    },
+    "cn/system_ext/etc/permissions/system-ext-permissions-xiaomi.xml": {
+      "sha256": "d23e560b806b95de49d8e17b92ccd4544bd0196ad1b4065935849fed10770b37",
+      "size": 2214
+    },
+    "cn/system_ext/etc/permissions/telephony_system-ext_privapp-permissions-qti.xml": {
+      "sha256": "7f5f554b4115201eb47d08fd313eac1b449ec1c4481ab71a549263c9ae98547e",
+      "size": 3460
+    },
+    "cn/system_ext/etc/permissions/vendor.qti.hardware.c2pa-V1-java.xml": {
+      "sha256": "a9f7ade5b4f426ad5dc76dfd63768cb04976b9f7c00c4daa6d6a11b48e9967d3",
+      "size": 364
+    },
+    "cn/system_ext/etc/permissions/vendor.qti.ims.rcsservice.xml": {
+      "sha256": "5872de69f4ca9fde586564af5b5c22dd85e8655f3e0ece22a1c28bb5f2245c92",
+      "size": 2192
+    },
+    "cn/system_ext/etc/permissions/vendor.qti.imsdatachannel.xml": {
+      "sha256": "c1b1fb89626a7caef272aeaa5d87421d76119e8f2e0a3bd3e7fbc891713be9bf",
+      "size": 324
+    },
+    "cn/system_ext/etc/permissions/vendor.qti.imsdcservice.xml": {
+      "sha256": "0bd10a66e96a41297ed717fc73cc0790d60432e1f6bb40fca5287c99bd7e1a65",
+      "size": 460
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.aidl.intentaware-V1-java-permission.xml": {
+      "sha256": "3b0d3e3efb2dfc5653dd837b819308c5df4840cf3ca70aa547d136e5606515f5",
+      "size": 200
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.aidlbgservice-V1.0-java-permission.xml": {
+      "sha256": "2c928e1cd339ea37fa0fad6f4c82344904075638310fdaa4928cf9f475b4fdd0",
+      "size": 188
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.misys-V1.0-java-permission.xml": {
+      "sha256": "096377f40031904d1b8e62580b8114224c96fb75a6344ec8213cbeb0611c047c",
+      "size": 175
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.misys-V2.0-java-permission.xml": {
+      "sha256": "77035d86c2788aa53725c20554c920fdab62b75242b2a043a0bb2dd20064934a",
+      "size": 175
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.misys-V4.0-java-permission.xml": {
+      "sha256": "31218d1c91b72392b613fdf6a93b83640ff9109455a093201b89a9a8cac49865",
+      "size": 175
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.misys.V3_0-permission.xml": {
+      "sha256": "2535688ee7e67cc83a2e4c6fbccfbf501f45e0d698c6a06af492fb5f2b997bb9",
+      "size": 165
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.postprocservice-V1-java-permission.xml": {
+      "sha256": "3a22f4bfe89ad6388a67bf7d2f985ae285b602270f7b95cc116b9d46e8236bd7",
+      "size": 188
+    },
+    "cn/system_ext/etc/permissions/vendor.xiaomi.hardware.videoservice-V9-java-permission.xml": {
+      "sha256": "4a66e163f84404aa7e65e1981ad62ddbb73eded54cefccf51d78af9df58f9f56",
+      "size": 189
+    },
+    "cn/system_ext/etc/permissions/wfd-system-ext-privapp-permissions-qti.xml": {
+      "sha256": "fe7e731cf496fa66233d7bae11db1ff3d08beba11150dbe726cb9048aad5aa28",
+      "size": 559
+    },
+    "cn/system_ext/priv-app/AuthManager/AuthManager.apk": {
+      "sha256": "e99dd50819f368ab29a4c3edf9c62feb447d88d348f90868436cb2c02cd94456",
+      "size": 10609677
+    },
+    "global/data-app/MIUIDeskClockGlobal/MIUIDeskClockGlobal.apk": {
+      "sha256": "8cd4e6c98b3cb091385f8272d32ea9a3b61ab472b9f8d274073680c003978283",
+      "size": 18668109
+    }
+  }
+}

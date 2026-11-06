@@ -205,12 +205,23 @@ public final class ComponentController {
             write(state("downloads-ready-"+id+".json"),new JSONObject().put("ok",true).put("id",id).put("version",any(job.getJSONObject("config"))?125:123));
         } finally {shell("cmd package unstop --user 0 com.android.providers.downloads >/dev/null 2>&1 || true");}
     }
-    void prepare(JSONObject wanted, boolean installing) throws Exception {
+    void prepare(JSONObject wanted, boolean installing, boolean upgrading) throws Exception {
         if(state("mounted.json").isFile())throw new IOException("上次启动的配置尚未完成，请解锁手机后刷新状态");
-        File[] users=new File("/data/user").listFiles();if(users==null||users.length!=1||!users[0].getName().equals("0"))throw new IOException("当前版本的数据迁移仅支持主用户 0");
+        JSONObject before=config("applied.json");
+        boolean unchanged=true;
+        for(int i=0;i<features.length();i++) {
+            String id=features.getJSONObject(i).getString("id");
+            if(enabled(before,id)!=enabled(wanted,id) || before.getJSONObject(id).getBoolean("remove")!=wanted.getJSONObject(id).getBoolean("remove")) unchanged=false;
+        }
+        File[] users=new File("/data/user_de").listFiles();
+        if(users==null || !new File("/data/user_de/0").isDirectory())throw new IOException("无法确认主用户数据目录");
+        // A same-configuration module upgrade does not switch package identities
+        // or user data. XSpace must not prevent installing maintenance fixes.
+        // Keep the single-user restriction for component/data transitions.
+        if(users.length!=1 && (!upgrading || !unchanged))throw new IOException("检测到应用双开或其他用户，当前仅支持保持原配置升级模块；组件切换的数据迁移仅支持主用户 0");
         if(!"RUNNING_UNLOCKED".equals(cmd("/system/bin/cmd","activity","get-started-user-state","0"))) throw new IOException("请解锁手机后保存，应用数据需要先备份");
         if(!state("source.zip").isFile()) throw new IOException("缺少本地安装源，请重新安装完整模块后再保存");
-        JSONObject before=config("applied.json"); JSONArray backups=new JSONArray(), restores=new JSONArray();
+        JSONArray backups=new JSONArray(), restores=new JSONArray();
         File next=new File(mod,"prepare-system"); if(next.exists()) remove(next); next.mkdirs();
         try (ZipFile zip=new ZipFile(state("source.zip"))) {
             ZipEntry c=zip.getEntry("catalog.json"); if(c==null) throw new IOException("安装源不包含组件清单");
@@ -610,10 +621,11 @@ public final class ComponentController {
                 if(op.equals("status")){System.out.println(c.status());return;}
                 if(op.equals("save")) {
                     if(args.length!=3||args[2].length()>16384||!args[2].matches("[A-Za-z0-9+/=]+"))throw new IOException("配置编码无效");
-                    c.prepare(c.validate(new JSONObject(new String(Base64.getDecoder().decode(args[2]),"UTF-8"))),false);
+                    c.prepare(c.validate(new JSONObject(new String(Base64.getDecoder().decode(args[2]),"UTF-8"))),false,false);
                 } else if(op.equals("install")) {
                     JSONObject wanted=c.config("desired.json");
-                    if(!c.state("applied.json").isFile()) {
+                    boolean upgrading=c.state("applied.json").isFile();
+                    if(!upgrading) {
                         JSONObject original=c.defaults();Iterator<String> ids=original.keys();
                         while(ids.hasNext())original.getJSONObject(ids.next()).put("enabled",false);
                         write(c.state("applied.json"),original);
@@ -621,13 +633,13 @@ public final class ComponentController {
                     // The installer archive contains every CN APK. Make its current
                     // tree match the applied configuration first, so a rejected
                     // pre-scan migration cannot accidentally mount the new CN tree.
-                    c.prepare(c.config("applied.json"),false);
+                    c.prepare(c.config("applied.json"),false,upgrading);
                     File current=new File(c.mod,"system");if(current.exists())remove(current);
                     Files.move(new File(c.mod,"next-system").toPath(),current.toPath());
                     Files.delete(new File(c.mod,"next-job.json").toPath());
                     c.properties(c.config("applied.json"));
                     write(c.state("desired.json"),wanted);
-                    c.prepare(wanted,true);
+                    c.prepare(wanted,true,upgrading);
                 }
                 else if(op.equals("early"))c.early();
                 else if(op.equals("late"))c.late();

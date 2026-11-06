@@ -3,7 +3,7 @@
 [![Build Songyuan Module](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml/badge.svg)](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
 
-为 **HyperOS 3 官方国际版恢复国行应用与服务**的 Root 模块，包含钱包、小爱、云服务、主题、相册等 **19 个功能开关**，提供 KernelSU WebUI、组件按需启停、删除或保留文件及离线恢复。
+由 **dalong** 维护，为 **HyperOS 3 官方国际版恢复国行应用与服务**的 Root 模块，包含钱包、小爱、云服务、主题、相册等 **19 个功能开关**，提供 KernelSU WebUI、组件按需启停、删除或保留文件及离线恢复。
 
 当前发行版是 **songyuan 专用适配**，应用来自同机型、同版本国行 ROM，保留官方原始签名。项目源自 HyperOS3EULocalization，在此基础上实现官方国际版适配、依赖修复及组件管理。
 
@@ -17,10 +17,10 @@
 | 目标系统 | 官方国际版 `OS3.0.306.0.WGNMIXM` |
 | Android / 架构 | Android 16 / SDK 36 / ARM64 |
 | 国行组件来源 | 同机型 `OS3.0.306.0.WGNCNXM` |
-| 模块版本 / ID | `3.1.0-songyuan` / `songyuan_cn_complete` |
-| 已验证 Root 环境 | KernelSU 3.3.1 + `magic_mount_rs` 4.0.11-930 |
+| 模块版本 / ID | `3.1.1-songyuan` / `songyuan_cn_complete` |
+| 已验证 Root 环境 | KernelSU 3.3.1；3.1.0 使用 `magic_mount_rs` 4.0.11-930，3.1.1 使用 4.1.12-959 |
 | SELinux | Enforcing |
-| 用户范围 | 主用户 `0`；未验证多用户、工作资料的数据切换 |
+| 用户范围 | 主用户 `0`；存在应用双开或其他用户时只允许保持配置升级，组件数据切换仍限定单用户 |
 
 KernelSU 需要可用的系统文件挂载能力。真机验证使用上述挂载元模块，普通应用无需为此授予 Root。App Profile 中若主动隐藏模块，可能导致应用看不到替换文件；本项目未验证其他 Root 管理器及所有挂载实现。
 
@@ -107,6 +107,7 @@ WebUI 关闭组件时会同时处理受管理的 `/data/app` 更新层，避免�
 | 智能卡安装后不可用 | 启动扫描前处理独立 UID 与 `android.uid.nfc` 的差异，同时处理数据属主和 SELinux 标签 |
 | 云备份显示本机不可用 | 使用同 ROM 国行桌面及对应命名空间，切换时迁移桌面布局 |
 | 相册不能同步 | 修复账号访问权限、AppOps 和系统同步注册；成功后不持续覆盖用户的同步选择 |
+| 相册同步后缩略图空白、原图无法写入 | 3.1.1 按当前相册 UID 修复自身外置目录中的旧属主，保留内容、组、模式和 SELinux 标签，每次解锁启动检查并先备份权限记录 |
 | 查找设备定位没有结果 | 首次启用云服务时修复已有官方国行查找设备的运行时定位权限与 UID AppOps，后续保留用户权限选择 |
 | 已重启仍显示等待重启 | 按待处理任务、启动提交和最终结果区分状态 |
 | 关闭国内时钟后时钟消失 | 提供同签名国际版回退 APK，并登记应用更新以保留可扫描入口及原闹钟 |

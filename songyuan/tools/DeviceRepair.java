@@ -3,12 +3,23 @@ import android.content.ContentResolver;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.system.Os;
+import android.system.OsConstants;
+import android.system.StructStat;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.FileVisitResult;
+import java.nio.file.SimpleFileVisitor;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.util.HashSet;
 import java.util.Set;
 
-/** One-time migrations for the exact Global/CN 3.0.306.0 pair; no account identifiers logged. */
+/** Device repairs for the exact Global/CN 3.0.306.0 pair; no account identifiers logged. */
 public final class DeviceRepair {
     private static final String AUTHORITY = "com.miui.gallery.cloud.provider";
     private static final String[][] COLUMNS = {
@@ -95,11 +106,76 @@ public final class DeviceRepair {
         }
     }
 
+    /** Reconcile only Gallery's own external data after PackageManager changes its UID. */
+    static void galleryStorage() throws Exception {
+        if (android.os.Process.myUid() != 0) throw new SecurityException("Root required");
+        String pkg = "com.miui.gallery";
+        String result = ComponentController.cmd("/system/bin/cmd", "package", "list", "packages",
+                "-U", "--user", "0", pkg);
+        java.util.regex.Matcher match = java.util.regex.Pattern.compile(
+                "(?m)^package:com\\.miui\\.gallery uid:([0-9]+)$").matcher(result);
+        if (!match.find()) throw new IOException("Gallery is not installed for user 0");
+        final int uid = Integer.parseInt(match.group(1));
+        if (uid < 10000 || uid >= 20000 || match.find()) throw new IOException("Unexpected Gallery UID");
+        if (Os.stat("/data/user_de/0/" + pkg).st_uid != uid)
+            throw new IOException("Gallery private data UID does not match PackageManager");
+        File root = new File("/data/media/0/Android/data/" + pkg);
+        if (!root.exists()) {
+            System.out.println("gallery_external_storage=absent");
+            return;
+        }
+        if (!root.getCanonicalPath().equals(root.getPath()))
+            throw new IOException("Gallery external data path is not canonical");
+        final JSONArray changes = new JSONArray();
+        final int[] visited = {0};
+        Files.walkFileTree(root.toPath(), new SimpleFileVisitor<Path>() {
+            FileVisitResult check(Path path) throws IOException {
+                try {
+                    if (!path.toFile().getCanonicalPath().equals(path.toString()))
+                        throw new IOException("Non-canonical Gallery external data entry");
+                    StructStat stat = Os.lstat(path.toString());
+                    if (OsConstants.S_ISLNK(stat.st_mode) || (!OsConstants.S_ISDIR(stat.st_mode)
+                            && (!OsConstants.S_ISREG(stat.st_mode) || stat.st_nlink != 1)))
+                        throw new IOException("Unsupported entry in Gallery external data");
+                    visited[0]++;
+                    if (stat.st_uid != uid) changes.put(new JSONObject().put("path", path.toString())
+                            .put("uid", stat.st_uid).put("gid", stat.st_gid).put("mode", stat.st_mode)
+                            .put("device", stat.st_dev).put("inode", stat.st_ino));
+                    return FileVisitResult.CONTINUE;
+                } catch (Exception error) { throw new IOException("Cannot inspect Gallery external data", error); }
+            }
+            @Override public FileVisitResult preVisitDirectory(Path path, BasicFileAttributes attrs) throws IOException { return check(path); }
+            @Override public FileVisitResult visitFile(Path path, BasicFileAttributes attrs) throws IOException { return check(path); }
+        });
+        if (changes.length() != 0) {
+            ComponentController.cmd("/system/bin/am", "force-stop", "--user", "0", pkg);
+            try {
+                File backup = new File(ComponentController.STATE, "gallery-storage-" + System.currentTimeMillis() + ".json");
+                ComponentController.write(backup, new JSONObject().put("uid", uid).put("entries", changes));
+                for (int i = 0; i < changes.length(); i++) {
+                    JSONObject entry = changes.getJSONObject(i);
+                    String path = entry.getString("path");
+                    if (!new File(path).getCanonicalPath().equals(path))
+                        throw new IOException("Gallery external data path changed during repair");
+                    StructStat current = Os.lstat(path);
+                    if (current.st_dev != entry.getLong("device") || current.st_ino != entry.getLong("inode")
+                            || current.st_mode != entry.getInt("mode") || current.st_uid != entry.getInt("uid"))
+                        throw new IOException("Gallery external data changed during repair");
+                    // Keep group, mode, SELinux context and every byte of media/cache data.
+                    Os.lchown(path, uid, -1);
+                    if (Os.lstat(path).st_uid != uid) throw new IOException("Gallery external data UID repair failed");
+                }
+            } finally { ComponentController.cmd("/system/bin/cmd", "package", "unstop", "--user", "0", pkg); }
+        }
+        System.out.println("gallery_external_storage=ok uid=" + uid + " checked=" + visited[0] + " repaired=" + changes.length());
+    }
+
     public static void main(String[] args) {
         try {
-            if (args.length != 1) throw new IllegalArgumentException("Expected downloads, gallery or status");
+            if (args.length != 1) throw new IllegalArgumentException("Expected downloads, gallery, gallery-storage or status");
             if (args[0].equals("downloads")) downloads(true);
             else if (args[0].equals("gallery")) gallery(true);
+            else if (args[0].equals("gallery-storage")) galleryStorage();
             else if (args[0].equals("status")) gallery(false);
             else throw new IllegalArgumentException("Unknown mode");
             System.exit(0);

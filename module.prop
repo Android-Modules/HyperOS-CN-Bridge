@@ -2,7 +2,7 @@ version=v2.0
 modify=Adapted for any HyperOS 3 device/build
 
 id=HyperOS3EULocalization
-name=HyperOS3 EU 本地化
+name=HyperOS CN Bridge · 上游参考
 versionCode=20
-author=LSHFGJ
-description=Restore selected CN HyperOS 3 components for xiaomi.eu ROMs.
+author=dalong
+description=HyperOS CN Bridge 历史安装器参考，源自 LSHFGJ/HyperOS3EULocalization；当前发行请使用 songyuan 专用构建。

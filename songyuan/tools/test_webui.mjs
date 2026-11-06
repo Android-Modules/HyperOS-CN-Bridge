@@ -20,7 +20,7 @@ const context=await browser.newContext({viewport:{width:393,height:852},deviceSc
 const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
 await page.addInitScript(({catalog})=>{
  const defaults=Object.fromEntries(catalog.features.map(f=>[f.id,{enabled:true,remove:true}]));
- window.qa={calls:[],state:{ok:true,desired:defaults,applied:structuredClone(defaults),actual:{},pending:false,result:{ok:true,message:'配置已在本次启动生效'},version:'3.1.0',sourceAvailable:true}};
+ window.qa={calls:[],state:{ok:true,desired:defaults,applied:structuredClone(defaults),actual:{},pending:false,result:{ok:true,message:'配置已在本次启动生效'},version:catalog.version,sourceAvailable:true}};
  window.ksu={exec(command,callback){window.qa.calls.push(command);setTimeout(()=>{let result=window.qa.state;if(command.includes('config.sh save ')){result.desired=JSON.parse(atob(command.split(' ').at(-1)));result.pending=true;result.result={ok:true,message:'配置已保存，等待手动重启'};result={ok:true};}window[callback](0,JSON.stringify(result),'');},10);}};
 },{catalog});
 await page.goto('http://127.0.0.1:'+server.address().port);

@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
-  <title>国行组件</title>
+  <title>HyperOS CN Bridge</title>
   <link rel="stylesheet" href="style.css">
   <script src="app.js" defer></script>
 </head>
 <body>
 <div class="shell">
-  <header><div class="eyebrow">SONGYUAN · HYPEROS 3</div><div class="title-line"><h1>国行组件</h1><span class="version" id="version">3.1.0</span></div><p>让熟悉的服务，回到你的手机。</p></header>
+  <header><div class="eyebrow">HYPEROS CN BRIDGE · DALONG</div><div class="title-line"><h1>国行组件</h1><span class="version" id="version">3.1.1</span></div><p>为 songyuan 官方国际版提供配套国行应用与服务。</p></header>
   <main>
     <section id="components-page" class="page">
       <div class="summary card"><span class="summary-icon">中</span><div><strong id="summary-title">正在读取组件</strong><p id="summary-sub">正在连接 KernelSU</p></div><span class="status-dot" id="status-dot"></span></div>
@@ -22,16 +22,17 @@
     </section>
     <section id="status-page" class="page" hidden>
       <h2 class="page-title">运行状态</h2><div class="card info-card" id="runtime-status"></div>
-      <h2 class="section-heading">已集成修复</h2><div class="card info-card"><p>主题商店启动与壁纸下载</p><p>下载器数据库双向迁移，避免回退后软重启</p><p>账号与智能卡组件加载</p><p>相册账号权限与云同步注册</p><p>查找设备定位权限</p><p>国内云备份与国行桌面适配</p><p>NFC 智能卡共享身份迁移</p><small>修复随组件启用；不会自动下载全部云端照片，也不会自动执行云备份恢复。</small></div>
+      <h2 class="section-heading">已集成修复</h2><div class="card info-card"><p>主题商店启动与壁纸下载</p><p>下载器数据库双向迁移，避免回退后软重启</p><p>账号与智能卡组件加载</p><p>相册账号权限与云同步注册</p><p>相册外置缓存属主，修复同步后缩略图空白</p><p>查找设备定位权限</p><p>国内云备份与国行桌面适配</p><p>NFC 智能卡共享身份迁移</p><small>相册缓存属主在每次解锁启动后检查，其余修复随组件启用；不会自动下载全部云端照片，也不会自动执行云备份恢复。</small></div>
       <button class="secondary full" id="refresh">刷新状态</button>
     </section>
     <section id="help-page" class="page" hidden>
       <h2 class="page-title">更新与使用说明</h2>
+      <div class="card info-card"><h3>HyperOS CN Bridge</h3><p>作者与维护：dalong。面向 songyuan 官方 OS3.0.306.0.WGNMIXM，提供同版本国行应用、19 项功能开关和配套修复。</p><p>源自 LSHFGJ/HyperOS3EULocalization，感谢上游及相关开源项目。ROM 应用保留各自官方原始签名。</p></div>
       <div class="card info-card"><h3>可以在应用商店更新吗？</h3><p>可以尝试同包名、同签名的官方国行更新。更新后仍优先运行国内版，模块的区域与配套修复在启用期间继续生效。</p><p>新版仍需适配当前系统，无法保证所有后续版本均可用。更新异常时，重新安装本模块可恢复配套文件；商店更新包也需要相应回退。</p></div>
       <div class="card info-card"><h3>核心组件保持配套</h3><p>云服务、账号、推送、NFC 与支付依赖建议使用本模块的同版本组合。请勿从第三方来源混装签名或地区不同的更新。</p></div>
       <div class="card info-card"><h3>关闭与删除有什么区别？</h3><p>删除：重启后移除该组件的国内版展开文件与商店更新包。保留：文件留在模块私有目录，重启后不再加载，重新启用时可恢复。</p><p>两种方式都保留应用数据备份，不删除照片、短信、账号与卡片数据。只有国际版原本包含的应用才会回到原版；国行专属应用会从应用列表消失。</p><p>模块保留一份压缩安装源，删除文件后也能离线重新启用。数据备份与保留文件仅 Root 可读。</p></div>
       <div class="card info-card"><h3>为什么云服务包含桌面？</h3><p>国内云备份按桌面包名识别备份。启用云服务会使用配套国行桌面；关闭后回到 POCO 桌面，并迁移当前布局。账号和同步依赖可能仍被相册等组件使用。</p></div>
-      <div class="card info-card"><h3>保存与重启</h3><p>保存前请解锁手机。保存时会准备文件并备份受影响的应用数据；请随后手动重启，避免继续使用待关闭的应用。页面不会自动重启手机。</p><p>智能卡在国际版与国内版之间切换会迁移 UID。安卓密钥与 UID 绑定，部分卡片或认证可能需要重新验证。</p></div>
+      <div class="card info-card"><h3>保存与重启</h3><p>保存前请解锁手机。保存时会准备文件并备份受影响的应用数据；请随后手动重启，避免继续使用待关闭的应用。页面不会自动重启手机。</p><p>应用双开或其他用户存在时，可保持原配置升级已安装模块；组件切换的数据迁移仍要求单用户。</p><p>智能卡在国际版与国内版之间切换会迁移 UID。安卓密钥与 UID 绑定，部分卡片或认证可能需要重新验证。</p></div>
       <div class="card info-card"><h3>卸载整个模块</h3><p>先关闭全部组件、保存并手动重启，确认状态为已应用，再停用或卸载模块。直接停用模块会绕过下载数据库、桌面与智能卡的回退流程。</p></div>
     </section>
   </main>

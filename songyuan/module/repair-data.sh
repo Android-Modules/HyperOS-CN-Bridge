@@ -82,4 +82,12 @@ if [ -f "$MODDIR/system/product/priv-app/MIUIGallery/MIUIGallery.apk" ] && [ ! -
   chmod 444 /data/local/tmp/songyuan-repair.jar
   run su 1000 -c 'CLASSPATH=/data/local/tmp/songyuan-repair.jar app_process /system/bin DeviceRepair gallery' && touch "$STATE/gallery-sync-v1"
 fi
+# Same-package Global/CN transitions can allocate a new app UID. Android repairs
+# the external data root, but existing cache descendants may retain the old UID.
+# Check on every unlocked boot (also in Global/off mode); only stale owners change.
+GALLERY_STORAGE_RESULT=0
+if run pm path --user 0 com.miui.gallery; then
+  run env CLASSPATH="$MODDIR/repair.jar" app_process /system/bin DeviceRepair gallery-storage || GALLERY_STORAGE_RESULT=1
+fi
 chmod 600 "$REPORT" "$STATE/"*-v1 2>/dev/null
+exit "$GALLERY_STORAGE_RESULT"

@@ -1,5 +1,6 @@
 SKIPUNZIP=0
 
+ui_print "- HyperOS CN Bridge · dalong"
 ui_print "- Songyuan 官方国际版 → 同版本国行组件"
 [ "$(getprop ro.product.device)" = songyuan ] || abort "! 仅支持 songyuan"
 [ "$(getprop ro.build.version.incremental)" = OS3.0.306.0.WGNMIXM ] || abort "! 仅支持 OS3.0.306.0.WGNMIXM"

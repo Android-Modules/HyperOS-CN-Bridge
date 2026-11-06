@@ -210,7 +210,8 @@ def main():
         (stage / "packages.list").write_text("\n".join(sorted(packages)) + "\n")
         (stage / "replace.list").write_text("\n".join(sorted(replace)) + "\n")
         (stage / "sources.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
-        catalog = {"schema": 1, "version": "3.1.0", "features": feature_catalog(selected), "units": []}
+        version = re.search(r"^version=(\S+)", (stage / "module.prop").read_text(), re.M).group(1).removesuffix("-songyuan")
+        catalog = {"schema": 1, "version": version, "features": feature_catalog(selected), "units": []}
         # Global clock is a preload under /product/data-app, not a boot-scanned
         # system app. Keep its signed original as an explicit off-state fallback.
         clock_source = ROOT / "rom/global/data-app/MIUIDeskClockGlobal/MIUIDeskClockGlobal.apk"

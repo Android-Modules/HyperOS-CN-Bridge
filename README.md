@@ -179,7 +179,7 @@ gh workflow run release.yml --repo Android-Modules/HyperOS-CN-Bridge --ref main
 
 推送 `v*` 标签同样触发构建。工作流在 Ubuntu 24.04 上安装 Java / SDK，下载锁定的 ROM 原始资源，执行完整构建、签名和哈希检查，再使用 Chromium 运行 WebUI 自动化验证。成功后上传模块、校验值、来源清单及构建记录；当前不自动发布正式版本 Release。
 
-工作流仅需仓库读取权限，官方 Actions 固定到提交 SHA。不需要额外配置个人 Token；`GITHUB_TOKEN` 用于读取资源。Fork 默认仍引用锁文件指向的资源仓库。
+工作流仅需仓库读取权限，所用 Actions 固定到提交 SHA，SDK 命令行工具显式安装而不依赖运行器预装。不需要额外配置个人 Token；`GITHUB_TOKEN` 用于读取资源。Fork 默认仍引用锁文件指向的资源仓库。
 
 本地运行 WebUI 测试（先完成完整模块构建）：
 

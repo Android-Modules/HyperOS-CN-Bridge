@@ -30,7 +30,11 @@ jobs:
           java-version: '17'
 
       - name: Install Android 36 SDK
-        run: sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd # v4
+        with:
+          cmdline-tools-version: '12266719'
+          packages: 'platforms;android-36 build-tools;36.0.0'
+          log-accepted-android-sdk-licenses: false
 
       - name: Test ROM input validation
         run: python3 -m unittest discover -s songyuan/tools -p test_rom_inputs.py

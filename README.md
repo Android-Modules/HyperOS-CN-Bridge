@@ -5,7 +5,9 @@
 
 由 **dalong** 维护，为 **HyperOS 3 官方国际版恢复国行应用与服务**的 Root 模块，包含钱包、小爱、云服务、主题、相册等 **19 个功能开关**，提供 KernelSU WebUI、组件按需启停、删除或保留文件及离线恢复。
 
-当前发行版是 **songyuan 专用适配**，应用来自同机型、同版本国行 ROM，保留官方原始签名。项目源自 HyperOS3EULocalization，在此基础上实现官方国际版适配、依赖修复及组件管理。
+正式发行版是 **songyuan 专用适配**，应用来自同机型、同版本国行 ROM，保留官方原始签名。另有 [ishtar EliteRomLite 补全预览配置](ishtar/README.md)：用于小米 13 Ultra 的 EliteRomLite v4.05 / OS3.0.308.0.WMACNXM，保留改签系统应用，恢复 CN 判断并补装 9 个同版本官方组件。它不等于完整国行转换，不能使用 songyuan 安装包。
+
+项目源自 HyperOS3EULocalization，在此基础上实现官方国际版适配、依赖修复及组件管理。以下 19 项完整转换说明和下载步骤均针对 songyuan；ishtar 的范围、构建和限制见上述独立文档。
 
 > 当前仅验证下表中的系统组合。安装器会检查机型和版本，不适用于所有 HyperOS 3 设备；不要修改检查条件后跨机型刷入。
 

@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>HyperOS CN Bridge · ishtar</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script></head>
+<body><main>
+<header><small>dalong · ishtar 专用预览版</small><h1>HyperOS CN Bridge</h1><p>EliteRomLite v4.05 · OS3.0.308.0.WMACNXM</p></header>
+<section class="notice"><strong>保留 Elite 原有应用</strong><p>本模块补齐 9 个官方组件并恢复 CN 判断。相册、账号、桌面、下载器等仍使用 ROM 原包；不代表已恢复所有官方国行功能。</p></section>
+<section><h2>运行状态 <button id="refresh" type="button">刷新</button></h2><p id="phase" role="status">正在读取模块…</p><p id="result"></p><small id="version"></small></section>
+<section><h2>模块管理的补全项</h2><p class="muted">默认全部开启。关闭默认删除展开文件；离线安装源和数据备份继续保留。</p><div id="features"></div><button id="all" type="button" disabled>全部启用</button></section>
+<section><h2>ROM 原有应用</h2><p class="muted">这些应用不由模块替换或删除，以下只显示安装情况。</p><div id="native"></div></section>
+<details><summary>更新、开关与适配范围</summary>
+<p>补装组件只接受同包名、同签名且适配当前系统的官方更新；商店更新优先运行。不能保证所有未来版本兼容。</p>
+<p>Elite 改签的原有应用可能无法接受官方更新。模块不会修改签名校验或包身份；相册国内功能、账号及云服务仍需实际业务验证。该版本官方 ROM 没有独立主题商店和 HyperGalleryPluginCn，不从 songyuan 混装这两个包。</p>
+<p>关闭补装组件也会处理受管理的商店更新。删除模式移除展开文件，保留模式将文件与更新放入 Root 私有目录；两者均保留数据备份。保存后请手动重启并解锁。</p>
+<p>当前存在其他用户或应用双开时，仅支持首次补装或保持配置升级。为避免遗漏其他用户的数据，后续组件切换会明确拒绝；不要删除双开数据来绕过限制。</p>
+<p>CN 地区开关会在 CN 与本 ROM 的 HK / ishtar_elite_global 之间切换，不改变硬件型号。系统已有的国内应用不会因此自动变成国际版。</p>
+<p>状态目录：/data/adb/ishtar_cn。需要卸载时先关闭全部补全项并重启，确认生效后再卸载；存在其他用户时请先保留模块并处理数据迁移。</p>
+</details>
+<footer><p id="dirty">未修改配置</p><button id="save" type="button" disabled>保存，手动重启生效</button></footer>
+</main>
+<dialog id="disable"><h2 id="disable-title"></h2><label><input type="radio" name="removal" value="delete" checked>删除展开文件（默认）</label><label><input type="radio" name="removal" value="keep">保留展开文件</label><p>保留个人数据备份。重启后生效；ROM 原有应用不受此开关管理。</p><button id="cancel" type="button">取消</button><button id="confirm" type="button">确认关闭</button></dialog>
+<div id="toast" role="alert" hidden></div>
+</body></html>

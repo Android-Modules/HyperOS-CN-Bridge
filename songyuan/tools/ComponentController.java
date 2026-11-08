@@ -14,17 +14,27 @@ import java.util.zip.*;
 
 /** Root-only, offline controller. No user supplied shell, paths or package IDs. */
 public final class ComponentController {
-    static final File STATE = new File("/data/adb/songyuan_cn");
+    static File STATE = new File("/data/adb/songyuan_cn");
     static final String TSM = "com.miui.tsmclient", POCO = "com.mi.android.globallauncher", HOME = "com.miui.home";
     final File mod;
     final JSONObject catalog;
     final JSONArray units, features;
+    final boolean nativeAddons;
     ComponentController(String path) throws Exception {
         mod = new File(path).getCanonicalFile();
-        if (!mod.getName().equals("songyuan_cn_complete") ||
+        if (!(mod.getName().equals("songyuan_cn_complete") || mod.getName().equals("ishtar_cn_addons")) ||
                 !(mod.getParent().equals("/data/adb/modules") || mod.getParent().equals("/data/adb/modules_update")))
             throw new IOException("模块路径无效");
         catalog = read(new File(mod, "catalog.json"));
+        nativeAddons = mod.getName().equals("ishtar_cn_addons");
+        if(nativeAddons) {
+            if(!"ishtar-elite308-addons".equals(catalog.optString("profile")) ||
+                    !"ishtar".equals(cmd("/system/bin/getprop","ro.product.device")) ||
+                    !"OS3.0.308.0.WMACNXM".equals(cmd("/system/bin/getprop","ro.build.version.incremental")) ||
+                    !"EliteRomLite".equals(cmd("/system/bin/getprop","ro.build.elite.romvariant")) ||
+                    !"v4.05".equals(cmd("/system/bin/getprop","ro.build.elite.versioncode")))
+                throw new IOException("ishtar 补全配置与当前系统不匹配");
+        } else if(catalog.has("profile")) throw new IOException("模块配置类型不匹配");
         units = catalog.getJSONArray("units"); features = catalog.getJSONArray("features");
     }
     static String quote(String s) { return "'" + s.replace("'", "'\\''") + "'"; }
@@ -218,7 +228,16 @@ public final class ComponentController {
         // A same-configuration module upgrade does not switch package identities
         // or user data. XSpace must not prevent installing maintenance fixes.
         // Keep the single-user restriction for component/data transitions.
-        if(users.length!=1 && (!upgrading || !unchanged))throw new IOException("检测到应用双开或其他用户，当前仅支持保持原配置升级模块；组件切换的数据迁移仅支持主用户 0");
+        // A native-ROM first install only adds absent packages, without moving
+        // existing identities or data. Verify absence before allowing profiles.
+        boolean additionsOnly=nativeAddons&&!upgrading;
+        if(additionsOnly) for(int i=0;i<units.length();i++) {
+            JSONObject u=units.getJSONObject(i);String pkg=u.getString("package");
+            if(active(u,before)||u.getBoolean("globalPresent")||
+                    !shell("pm path --user 0 "+pkg+" 2>/dev/null || true").isEmpty()) additionsOnly=false;
+            for(File user:users) if(new File(user,pkg).exists()) additionsOnly=false;
+        }
+        if(users.length!=1 && (!upgrading || !unchanged) && !additionsOnly)throw new IOException("检测到应用双开或其他用户：仅允许缺失组件的首次补装或保持原配置升级；组件数据切换仅支持主用户 0");
         if(!"RUNNING_UNLOCKED".equals(cmd("/system/bin/cmd","activity","get-started-user-state","0"))) throw new IOException("请解锁手机后保存，应用数据需要先备份");
         if(!state("source.zip").isFile()) throw new IOException("缺少本地安装源，请重新安装完整模块后再保存");
         JSONArray backups=new JSONArray(), restores=new JSONArray();
@@ -257,7 +276,7 @@ public final class ComponentController {
                     target.setReadable(true,false);
                 }
             }
-            if(!enabled(wanted,"clock")) {
+            if(!nativeAddons && !enabled(wanted,"clock")) {
                 JSONArray fallback=catalog.getJSONArray("clockFallback");
                 for(int i=0;i<fallback.length();i++) {
                     JSONObject item=fallback.getJSONObject(i);String path=item.getString("path");
@@ -276,9 +295,9 @@ public final class ComponentController {
             publishPermissions(next);
         } catch(Exception e) { remove(next); throw e; }
         // Launcher namespaces differ; save the outgoing layout before boot scanning.
-        if(enabled(before,"cloud")!=enabled(wanted,"cloud")) snapshot(enabled(before,"cloud")?HOME:POCO);
-        if(installing && new File("/data/user_de/0/"+TSM).isDirectory()) snapshot(TSM);
-        if(!any(before)&&any(wanted)) {
+        if(!nativeAddons && enabled(before,"cloud")!=enabled(wanted,"cloud")) snapshot(enabled(before,"cloud")?HOME:POCO);
+        if(!nativeAddons && installing && new File("/data/user_de/0/"+TSM).isDirectory()) snapshot(TSM);
+        if(!nativeAddons && !any(before)&&any(wanted)) {
             // Install the paired auth update while GB is still active. Otherwise
             // CN region can start the Global clipboard service before late().
             File auth=new File(mod,"payload/AuthManager/AuthManager.apk");
@@ -287,9 +306,9 @@ public final class ComponentController {
         }
         JSONObject job=new JSONObject().put("config",wanted).put("before",before).put("backups",backups)
                 .put("restores",restores).put("downloadDbPresent",new File("/data/user/0/com.android.providers.downloads/databases/downloads.db").isFile())
-                .put("downloadMigrationRequired",installing)
+                .put("downloadMigrationRequired",!nativeAddons&&installing)
                 .put("id",System.currentTimeMillis());
-        if(installing || any(wanted)!=any(before))prepareDownloads(job);
+        if(!nativeAddons && (installing || any(wanted)!=any(before)))prepareDownloads(job);
         File prior=new File(mod,"prior-next-system"), ready=new File(mod,"next-system");
         if(prior.exists())remove(prior);
         if(ready.exists())Files.move(ready.toPath(),prior.toPath());
@@ -309,6 +328,18 @@ public final class ComponentController {
         for(Node n=root.getFirstChild();n!=null;n=n.getNextSibling()) if(n instanceof Element) {
             Element e=(Element)n; if(e.getTagName().equals(tag)&&e.getAttribute("name").equals(name)) return e;
         } return null;
+    }
+    void requireNativePackagesAbsent() throws Exception {
+        Element settings=xml(cmd("/system/bin/abx2xml","/data/system/packages.xml","-"));
+        File[] users=new File("/data/user_de").listFiles();
+        if(users==null)throw new IOException("无法确认用户数据目录");
+        for(int i=0;i<units.length();i++) {
+            JSONObject unit=units.getJSONObject(i);String pkg=unit.getString("package");
+            if(unit.getBoolean("globalPresent") || top(settings,"package",pkg)!=null)
+                throw new IOException("首次补装拒绝覆盖已登记的组件："+pkg);
+            for(File user:users)if(new File(user,pkg).exists() || new File("/data/user/"+user.getName(),pkg).exists())
+                throw new IOException("首次补装发现已有用户数据，请先核对组件身份："+pkg);
+        }
     }
     static Element xml(String s) throws Exception {
         // Android's DOM provider does not implement the desktop SAX feature URIs.
@@ -399,6 +430,16 @@ public final class ComponentController {
         Files.deleteIfExists(state("tsm-finish").toPath());
     }
     void properties(JSONObject c) throws Exception {
+        if(nativeAddons) {
+            boolean cn=enabled(c,"cn_region");
+            String props="ro.product.mod_device="+(cn?"ishtar":"ishtar_elite_global")+"\nro.miui.region="+(cn?"CN":"HK")+"\nro.miui.cust_variant="+(cn?"cn":"hk")+
+                    "\nro.vendor.miui.region="+(cn?"CN":"HK")+"\nro.vendor.miui.cust_variant="+(cn?"cn":"hk")+"\n";
+            // This ROM uses the integrated ThemeManager. Enabling the separate
+            // ThemeStore mode hides its launcher and redirects to an absent APK.
+            writeText(new File(mod,"system.prop"),props);new File(mod,"system.prop").setReadable(true,false);
+            writeText(new File(mod,"cust_variant"),cn?"cn\n":"hk\n");new File(mod,"cust_variant").setReadable(true,false);
+            return;
+        }
         boolean on=any(c), cloud=enabled(c,"cloud"), theme=enabled(c,"theme");
         String props="ro.product.mod_device="+(on?"songyuan":"songyuan_global")+"\nro.miui.region="+(on?"CN":"GB")+
                 "\nro.miui.product.home="+(cloud?HOME:POCO)+"\nro.miui.support.system.app.uninstall.v2="+theme+"\nro.vendor.audio.aiasst.support="+enabled(c,"aiasst")+"\n";
@@ -418,7 +459,7 @@ public final class ComponentController {
         String settings=cmd("/system/bin/abx2xml","/data/system/packages.xml","-"); Element root=xml(settings);
         JSONArray moved=new JSONArray();
         Element originalTsm=top(root,"package",TSM);
-        boolean identityChange=originalTsm!=null && originalTsm.getAttribute("sharedUserId").equals("1027")!=enabled(wanted,"tsm");
+        boolean identityChange=!nativeAddons && originalTsm!=null && originalTsm.getAttribute("sharedUserId").equals("1027")!=enabled(wanted,"tsm");
         if(identityChange && state("tsm-last-transition").exists())remove(state("tsm-last-transition"));
         try {
         startDownloadWorker(job);
@@ -434,7 +475,7 @@ public final class ComponentController {
             File dest=state("detached-updates/"+pkg); if(dest.exists()) remove(dest); dest.getParentFile().mkdirs();
             Files.move(from.toPath(),dest.toPath()); moved.put(new JSONObject().put("package",pkg).put("from",from.getPath()));
         }
-            tsmIdentity(enabled(wanted,"tsm"),settings);
+            if(!nativeAddons)tsmIdentity(enabled(wanted,"tsm"),settings);
             Files.move(current.toPath(),old.toPath());
             try {Files.move(next.toPath(),current.toPath());} catch(Exception e){Files.move(old.toPath(),current.toPath());throw e;}
             properties(wanted); job.put("updates",moved); write(state("mounted.json"),job);
@@ -488,15 +529,15 @@ public final class ComponentController {
                 job.put(key,true);write(state("mounted.json"),job);
             }
         }
-        if(state("tsm-finish").isFile()) {
+        if(!nativeAddons && state("tsm-finish").isFile()) {
             String uid=new String(Files.readAllBytes(state("tsm-finish").toPath()),"UTF-8").trim();
             for(String base:Arrays.asList("/data/user/0/","/data/user_de/0/")) if(new File(base+TSM).isDirectory()) {cmd("/system/bin/chown","-R",uid+":"+uid,base+TSM);cmd("/system/bin/restorecon","-RF",base+TSM);}
             Files.delete(state("tsm-finish").toPath());
         }
-        if(enabled(before,"cloud")!=enabled(wanted,"cloud")&&!job.optBoolean("launcherDone")) {migrateLauncher(enabled(wanted,"cloud"));job.put("launcherDone",true);write(state("mounted.json"),job);}
+        if(!nativeAddons && enabled(before,"cloud")!=enabled(wanted,"cloud")&&!job.optBoolean("launcherDone")) {migrateLauncher(enabled(wanted,"cloud"));job.put("launcherDone",true);write(state("mounted.json"),job);}
         if(!enabled(before,"gallery")&&enabled(wanted,"gallery"))Files.deleteIfExists(state("gallery-sync-v1").toPath());
         if(!enabled(before,"cloud")&&enabled(wanted,"cloud"))Files.deleteIfExists(state("finddevice-location-v1").toPath());
-        if(any(wanted)) {
+        if(!nativeAddons && any(wanted)) {
             String path=cmd("/system/bin/pm","path","com.lbe.security.miui");
             File auth=new File(mod,"payload/AuthManager/AuthManager.apk");
             String current=path.replace("package:","").split("\n")[0];
@@ -505,7 +546,7 @@ public final class ComponentController {
                 if(!result.contains("Success")) throw new IOException("国行权限管理器安装失败");
             }
         }
-        if(!enabled(wanted,"clock")) {
+        if(!nativeAddons && !enabled(wanted,"clock")) {
             // The Global ROM's data-app preload is not rescanned after setup.
             // Register the original as an update as well, so uninstalling this
             // module after an all-off boot does not remove the only clock APK.
@@ -574,9 +615,20 @@ public final class ComponentController {
     }
     JSONObject status() throws Exception {
         JSONObject desired=config("desired.json"),applied=config("applied.json"),actual=new JSONObject();
+        JSONArray displayUnits=new JSONArray(),displayFeatures=new JSONArray();
+        for(int i=0;i<units.length();i++)displayUnits.put(units.getJSONObject(i));
+        for(int i=0;i<features.length();i++)displayFeatures.put(features.getJSONObject(i));
+        if(nativeAddons) {
+            JSONArray nativeFeatures=catalog.getJSONArray("nativeFeatures");
+            for(int i=0;i<nativeFeatures.length();i++) {
+                JSONObject feature=nativeFeatures.getJSONObject(i);displayFeatures.put(feature);
+                JSONArray packages=feature.getJSONArray("packages");
+                for(int k=0;k<packages.length();k++)displayUnits.put(new JSONObject().put("package",packages.getString(k)).put("owners",new JSONArray().put(feature.getString("id"))));
+            }
+        }
         String list=cmd("/system/bin/pm","list","packages","-f","--show-versioncode");
         Pattern p=Pattern.compile("^package:(.*)=([^=\\s]+)(?:\\s+versionCode:([0-9]+))?$",Pattern.MULTILINE);Matcher m=p.matcher(list);
-        while(m.find()) for(int i=0;i<units.length();i++) if(units.getJSONObject(i).getString("package").equals(m.group(2)))
+        while(m.find()) for(int i=0;i<displayUnits.length();i++) if(displayUnits.getJSONObject(i).getString("package").equals(m.group(2)))
             actual.put(m.group(2),new JSONObject().put("installed",true).put("updated",m.group(1).startsWith("/data/app/")).put("versionCode",m.group(3)));
         JSONObject featureIcons=new JSONObject();
         try {
@@ -584,10 +636,10 @@ public final class ComponentController {
             Object thread=Class.forName("android.app.ActivityThread").getMethod("systemMain").invoke(null);
             android.content.Context context=(android.content.Context)thread.getClass().getMethod("getSystemContext").invoke(thread);
             android.content.pm.PackageManager pm=context.getPackageManager();
-            for(int i=0;i<features.length();i++) {
-                String id=features.getJSONObject(i).getString("id");
-                for(int k=0;k<units.length();k++) {
-                    JSONObject unit=units.getJSONObject(k);if(!unit.getJSONArray("owners").optString(0).equals(id))continue;
+            for(int i=0;i<displayFeatures.length();i++) {
+                String id=displayFeatures.getJSONObject(i).getString("id");
+                for(int k=0;k<displayUnits.length();k++) {
+                    JSONObject unit=displayUnits.getJSONObject(k);if(!unit.getJSONArray("owners").optString(0).equals(id))continue;
                     String pkg=unit.getString("package");if(!actual.has(pkg))continue;
                     try {
                         android.content.pm.PackageInfo info=pm.getPackageInfo(pkg,0);
@@ -614,6 +666,10 @@ public final class ComponentController {
     public static void main(String[] args) {
         try {
             if(args.length<2)throw new IOException("缺少操作参数");
+            File candidate=new File(args[0]).getCanonicalFile();
+            if(!(candidate.getParent().equals("/data/adb/modules")||candidate.getParent().equals("/data/adb/modules_update")))throw new IOException("模块路径无效");
+            if(candidate.getName().equals("ishtar_cn_addons"))STATE=new File("/data/adb/ishtar_cn");
+            else if(!candidate.getName().equals("songyuan_cn_complete"))throw new IOException("模块路径无效");
             STATE.mkdirs(); cmd("/system/bin/chmod","700",STATE.getPath());
             ComponentController c=new ComponentController(args[0]);String op=args[1];
             if(op.equals("unlock-downloads")){if(args.length!=3)throw new IOException("缺少下载迁移编号");c.unlockDownloads(args[2]);return;}
@@ -623,6 +679,13 @@ public final class ComponentController {
                     if(args.length!=3||args[2].length()>16384||!args[2].matches("[A-Za-z0-9+/=]+"))throw new IOException("配置编码无效");
                     c.prepare(c.validate(new JSONObject(new String(Base64.getDecoder().decode(args[2]),"UTF-8"))),false,false);
                 } else if(op.equals("install")) {
+                    if(c.nativeAddons) {
+                        if(!c.state("applied.json").isFile())c.requireNativePackagesAbsent();
+                        String libraries=cmd("/system/bin/pm","list","libraries");
+                        Set<String> available=new HashSet<>(Arrays.asList(libraries.split("\n")));
+                        JSONArray required=c.catalog.getJSONArray("requiredLibraries");
+                        for(int i=0;i<required.length();i++)if(!available.contains("library:"+required.getString(i)))throw new IOException("当前 ROM 缺少必需共享库："+required.getString(i));
+                    }
                     JSONObject wanted=c.config("desired.json");
                     boolean upgrading=c.state("applied.json").isFile();
                     if(!upgrading) {

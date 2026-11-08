@@ -1,6 +1,6 @@
 id=ishtar_cn_addons
 name=HyperOS CN Bridge · ishtar Elite 补全
-version=3.2.0-ishtar-preview
-versionCode=30200
+version=3.3.1-ishtar
+versionCode=30301
 author=dalong
-description=ishtar EliteRomLite v4.05 / OS3.0.308.0.WMACNXM 专用。恢复 CN 判断并补齐 9 个同版本官方组件；保留 Elite 改签系统应用。含离线 WebUI，不迁移 NFC UID、桌面或下载数据库。
+description=ishtar EliteRomLite v4.05 / OS3.0.308.0.WMACNXM 专用。19 项独立适配，需 LSPosed 配套模块；补齐 9 个同版本 APK，原生应用保留原包。支持主用户独立卸载与保留，含 QESDK 配置修复和离线 WebUI。

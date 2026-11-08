@@ -60,7 +60,8 @@ def build(source, sdk):
         jvm = java / "java" if java else shutil.which("java")
         android = sdk / "platforms/android-36/android.jar"
         run([javac, "--release", "8", "-cp", android, "-d", classes,
-             ROOT / "songyuan/tools/ComponentController.java", ROOT / "songyuan/tools/DeviceRepair.java"])
+             ROOT / "songyuan/tools/ComponentController.java", ROOT / "songyuan/tools/DeviceRepair.java",
+             ROOT / "ishtar/tools/IshtarController.java"])
         run([jvm, "-cp", tools / "lib/d8.jar", "com.android.tools.r8.D8", "--min-api", "36",
              "--lib", android, "--output", dex, *sorted(classes.glob("*.class"))])
         with zipfile.ZipFile(stage / "repair.jar", "w", zipfile.ZIP_DEFLATED) as z:
@@ -68,8 +69,21 @@ def build(source, sdk):
             info.compress_type = zipfile.ZIP_DEFLATED
             info.external_attr = 0o100644 << 16
             z.writestr(info, (dex / "classes.dex").read_bytes())
-        catalog = dict(schema=1, profile="ishtar-elite308-addons", version="3.2.0-ishtar-preview",
-                       target=BUILD, features=[], units=[], nativeFeatures=[], requiredLibraries=[])
+        catalog = dict(schema=2, profile="ishtar-elite308-addons", version=re.search(r"^version=(.+)$", (stage / "module.prop").read_text(), re.M).group(1),
+                       target=BUILD, features=[], units=[], nativeFeatures=[], requiredLibraries=[], nativeFiles=[])
+        permission = stage / "system/etc/permissions/signature-permissions-ishtar-market.xml"
+        catalog["nativeFiles"].append(dict(feature="market", path=permission.relative_to(stage).as_posix(), sha256=sha(permission)))
+        (stage / "payload").mkdir(exist_ok=True)
+        shutil.copyfile(permission, stage / "payload" / permission.name)
+        catalog["vendorCompat"] = []
+        for target, expected in {
+            "/vendor/etc/init/qesdk-manager.rc": "72f06fd61edadc11f90099bbca060373d9f463c584640223bf9f1e836c7bccf5",
+            "/vendor/etc/seccomp_policy/qesdk.policy": "458589447d055323eeead9e7d440be4c51063ce952e2b942746e7c6d1fa148ea",
+        }.items():
+            payload = stage / "compat" / Path(target).name
+            if sha(payload) != expected:
+                raise RuntimeError("QESDK official text changed: " + target)
+            catalog["vendorCompat"].append(dict(path=target, sha256=expected))
         manifest = dict(source=BUILD, device="ishtar", mode="native-addons", apks=[])
         libraries = set()
         for relative, package, _ in SPECS:
@@ -115,15 +129,20 @@ def build(source, sdk):
                 file=(target / apk.name).relative_to(stage).as_posix(), sha256=sha(apk), certificate=CERTIFICATES.get(package, PLATFORM)))
         catalog["requiredLibraries"] = sorted(libraries)
         owners = {o for u in catalog["units"] for o in u["owners"]}
-        catalog["features"] = [dict(id="cn_region", name="CN 地区与国内功能判断", category="地区配置",
-            description="恢复 CN / cn，并移除 mod_device 的 _global 标记；不修改设备型号", update="paired")]
+        scope_source = (ROOT / "ishtar/companion/src/com/dalong/cnbridge/Scope.java").read_text()
+        scoped = {i: re.findall(r'"(com\.[a-zA-Z0-9_.]+)"', value)
+                  for i, value in re.findall(r'add\("([a-z]+)", ([^;]+)\);', scope_source)}
+        if set(scoped) != {f[0] for f in FEATURES}:
+            raise RuntimeError("Companion scope and catalog feature IDs differ")
         for i, name, category, description, update in FEATURES:
-            if i in owners:
-                catalog["features"].append(dict(id=i, name=name, category=category, description=description, update=update))
-            else:
-                catalog["nativeFeatures"].append(dict(id=i, name=name, category=category,
-                    packages=[p for p, owners in OWNERS.items() if owners[0] == i and p not in {"com.miui.themestore", "com.hyper.gallery.plugin"}],
-                    description="由现有 ROM 提供，保留原包与数据；国内功能受 CN 配置和 ROM 实现影响"))
+            native = i not in owners
+            if i == "cloud": description = "云服务、云备份与同步服务的地区适配"
+            if i == "theme": description = "当前 ROM 集成主题与壁纸的地区适配"
+            if i == "gallery": description = "当前 ROM 相册的地区适配，保留编辑器与照片"
+            feature = dict(id=i, name=name, category=category, description=description,
+                           update=update, native=native, packages=scoped[i])
+            catalog["features"].append(feature)
+            if native: catalog["nativeFeatures"].append(feature)
         (stage / "catalog.json").write_text(json.dumps(catalog, ensure_ascii=False, indent=2) + "\n")
         (stage / "sources.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
         shutil.copyfile(stage / "catalog.json", stage / "webroot/catalog.json")
@@ -140,6 +159,9 @@ def build(source, sdk):
                 z.writestr(info, p.read_bytes())
         with zipfile.ZipFile(output) as z:
             if z.testzip(): raise RuntimeError("ZIP CRC mismatch")
+            for item in catalog["nativeFiles"]:
+                if hashlib.sha256(z.read(item["path"])).hexdigest() != item["sha256"]:
+                    raise RuntimeError("ZIP configuration file changed: " + item["path"])
             for unit in catalog["units"]:
                 for item in unit["files"]:
                     if hashlib.sha256(z.read(item["path"])).hexdigest() != item["sha256"]:

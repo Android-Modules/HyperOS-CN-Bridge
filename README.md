@@ -1,13 +1,20 @@
 # HyperOS CN Bridge
 
-[![Build Songyuan Module](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml/badge.svg)](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml)
+[![Build Device Modules](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml/badge.svg)](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml)
 [![License: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg)](LICENSE)
 
 由 **dalong** 维护，为 **HyperOS 3 官方国际版恢复国行应用与服务**的 Root 模块，包含钱包、小爱、云服务、主题、相册等 **19 个功能开关**，提供 KernelSU WebUI、组件按需启停、删除或保留文件及离线恢复。
 
-正式发行版是 **songyuan 专用适配**，应用来自同机型、同版本国行 ROM，保留官方原始签名。另有 [ishtar EliteRomLite 补全预览配置](ishtar/README.md)：用于小米 13 Ultra 的 EliteRomLite v4.05 / OS3.0.308.0.WMACNXM，保留改签系统应用，恢复 CN 判断并补装 9 个同版本官方组件。它不等于完整国行转换，不能使用 songyuan 安装包。
+目前提供两个分别构建的发布包，不能互刷：
 
-项目源自 HyperOS3EULocalization，在此基础上实现官方国际版适配、依赖修复及组件管理。以下 19 项完整转换说明和下载步骤均针对 songyuan；ishtar 的范围、构建和限制见上述独立文档。
+| 配置 | 版本 | 适用系统 | 方式 |
+| --- | --- | --- | --- |
+| songyuan | 3.1.2-songyuan | 官方国际版 OS3.0.306.0.WGNMIXM | 同版本国行原签名 APK、共享地区配置 |
+| [ishtar](ishtar/README.md) | 3.3.1-ishtar + 配套 APK 1.0.0 | 小米 13 Ultra EliteRomLite v4.05 / OS3.0.308.0.WMACNXM | 保留 ROM 原包，19 项按进程独立适配，补装 9 个官方组件 |
+
+ishtar 已包含相册 Google 备份入口转小米云同步、同步适配器登记和 modemManager 循环退出修复。两个配置的实现与验证范围不同，具体限制见各自文档。
+
+项目源自 HyperOS3EULocalization，在此基础上实现官方国际版适配、依赖修复及组件管理。以下完整转换说明针对 songyuan；ishtar 的安装需要额外配套 APK 与 LSPosed，步骤见独立文档。
 
 > 当前仅验证下表中的系统组合。安装器会检查机型和版本，不适用于所有 HyperOS 3 设备；不要修改检查条件后跨机型刷入。
 
@@ -19,7 +26,7 @@
 | 目标系统 | 官方国际版 `OS3.0.306.0.WGNMIXM` |
 | Android / 架构 | Android 16 / SDK 36 / ARM64 |
 | 国行组件来源 | 同机型 `OS3.0.306.0.WGNCNXM` |
-| 模块版本 / ID | `3.1.1-songyuan` / `songyuan_cn_complete` |
+| 模块版本 / ID | `3.1.2-songyuan` / `songyuan_cn_complete` |
 | 已验证 Root 环境 | KernelSU 3.3.1；3.1.0 使用 `magic_mount_rs` 4.0.11-930，3.1.1 使用 4.1.12-959 |
 | SELinux | Enforcing |
 | 用户范围 | 主用户 `0`；存在应用双开或其他用户时只允许保持配置升级，组件数据切换仍限定单用户 |
@@ -58,7 +65,7 @@ KernelSU 需要可用的系统文件挂载能力。真机验证使用上述挂�
 
 ## 下载和安装
 
-1. 在 [Actions](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml) 打开一次 **成功的** `Build Songyuan Module` 运行，下载 `HyperOS-CN-Bridge-songyuan-运行编号` Artifact。下载 Artifact 需要登录 GitHub，保留期为 30 天。
+1. 在 [Actions](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml) 打开一次 **成功的** `Build Device Modules` 运行，按机型下载 `HyperOS-CN-Bridge-songyuan-运行编号` 或 `HyperOS-CN-Bridge-ishtar-运行编号` Artifact。下载 Artifact 需要登录 GitHub，保留期为 30 天。
 2. 解压 Artifact，得到真正的模块 `songyuan-cn-complete-OS3.0.306.0.zip`、对应 `.sha256`、`sources-complete.json` 和 `build-info.json`。**不要把 Artifact 外层 ZIP 或 ROM 构建资源当模块安装。**
 3. 确认机型、系统版本及挂载能力符合上表，并备份重要应用数据。涉及 NFC 身份和系统应用切换，应保留可用的模块恢复途径。
 4. 在 KernelSU 管理器内选择安装模块 ZIP，检查安装结果，然后手动重启并解锁主用户。
@@ -174,7 +181,7 @@ python3 songyuan/tools/build.py
 
 ### GitHub Actions 打包
 
-在仓库 **Actions → Build Songyuan Module → Run workflow** 选择分支并运行，也可执行：
+在仓库 **Actions → Build Device Modules → Run workflow** 选择分支并运行，也可执行：
 
 ```bash
 gh workflow run release.yml --repo Android-Modules/HyperOS-CN-Bridge --ref main

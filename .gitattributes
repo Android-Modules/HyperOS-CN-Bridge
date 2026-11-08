@@ -5,3 +5,5 @@
 *.mjs text eol=lf
 *.yml text eol=lf
 *.png binary
+# QESDK validates official bytes, including the final empty line.
+ishtar/module/compat/* -text whitespace=-blank-at-eof

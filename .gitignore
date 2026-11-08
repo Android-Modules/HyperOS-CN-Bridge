@@ -5,6 +5,8 @@ __pycache__/
 *.zip
 *.apk
 *.idsig
+*.jks
+*.keystore
 
 # ROM binaries live in a checksum-locked Release asset, never in Git/LFS.
 /system/

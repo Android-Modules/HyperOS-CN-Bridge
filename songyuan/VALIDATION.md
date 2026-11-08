@@ -19,6 +19,13 @@
 
 本地最终模块：`dist/songyuan-cn-complete-OS3.0.306.0.zip`，SHA256：`c821079a442ed20476ad266fdd3f6802c8c4b5662fd1f2182f51984deeb6bc31`。手机下载目录存有同名 ZIP 和校验文件。私有日志、截图及安装记录位于忽略的 `diagnostics/gallery-blank-20261106/`，不随模块或源码发布。
 
+## 3.1.2-songyuan 构建回归
+
+- 与 ishtar 分开构建，保留 OS3.0.306.0 国行 / 国际版原始输入、原签名 APK 与现有 songyuan 功能。ishtar 的按应用 LSPosed 配套、QESDK 覆盖和单用户安装登记逻辑不进入此模块。
+- 共享控制器抽取 verifyLoaded / appliedResult；songyuan 仍按原逻辑校验所选包是否加载，新增的每次启动挂载校验、boot ID 和权限文件处理均限定 nativeAddons 配置。
+- 两套 WebUI 回归、ROM 输入 5 项测试与完整构建通过；APK 签名、锁文件哈希和 ZIP CRC 通过。生产 ZIP SHA256：c5315a8b72cf35ce10e790b3625174045fef191d0c1e2688ab672b50dd78e9fa。
+- 本轮只连接 ishtar，未将 songyuan 包跨机型安装；songyuan 3.1.2 的结果是构建与共享逻辑回归，下面的 songyuan 真机业务结果属于历史版本。Actions 会单独产出 songyuan 模块与校验、来源记录。
+
 ## 3.1.0-songyuan（历史验收）
 
 目标手机：songyuan，官方国际版 OS3.0.306.0.WGNMIXM / Android 16；原签名组件来自同机型 OS3.0.306.0.WGNCNXM。日期为手机当地时间 2026-11-06。

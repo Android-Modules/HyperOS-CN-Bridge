@@ -1,6 +1,6 @@
 id=songyuan_cn_complete
 name=HyperOS CN Bridge · 国行组件
-version=3.1.1-songyuan
-versionCode=30101
+version=3.1.2-songyuan
+versionCode=30102
 author=dalong
 description=由 dalong 维护的 HyperOS 3 国行服务适配模块。仅限 songyuan 官方 OS3.0.306.0.WGNMIXM；含钱包、小爱、云服务、主题、相册等 19 项功能、离线 WebUI 与配套修复。

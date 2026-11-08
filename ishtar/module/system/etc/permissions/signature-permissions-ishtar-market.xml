@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<permissions>
+    <!-- Elite installs its native Market in /data/app. Android 15+ requires an
+         explicit allowlist even when PackageManager records a platform signer.
+         The framework still checks that signer; this grants no other package. -->
+    <signature-permissions package="com.xiaomi.market">
+        <permission name="android.permission.INSTALL_PACKAGES" />
+    </signature-permissions>
+</permissions>

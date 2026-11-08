@@ -11,9 +11,6 @@ STATE=/data/adb/ishtar_cn
 mkdir -p "$STATE"
 chmod 700 "$STATE"
 [ -f "$ZIPFILE" ] || abort "! 安装源不存在"
-cp "$ZIPFILE" "$STATE/source.zip.new" || abort "! 无法缓存离线安装源"
-chmod 600 "$STATE/source.zip.new"
-mv "$STATE/source.zip.new" "$STATE/source.zip"
 set_perm_recursive "$MODPATH" 0 0 0755 0644
 for SCRIPT in config.sh post-fs-data.sh service.sh action.sh; do
   set_perm "$MODPATH/$SCRIPT" 0 0 0755
@@ -24,7 +21,11 @@ CODE=$?
 ui_print "$RESULT"
 [ "$CODE" = 0 ] || abort "! 补全准备失败，未切换系统文件"
 sh "$MODPATH/mount-compat.sh" || abort "! 提示音模块的挂载目录兼容处理失败"
+cp "$ZIPFILE" "$STATE/source.zip.new" || abort "! 无法缓存离线安装源"
+chmod 600 "$STATE/source.zip.new"
+mv "$STATE/source.zip.new" "$STATE/source.zip"
 ui_print "- 保留现有相册、账号、桌面、NFC、下载器及其数据"
-ui_print "- 缺失组件默认开启，重启并解锁后生效"
-ui_print "- 多用户环境支持首次补装；后续开关切换需单用户"
-ui_print "- WebUI 明确区分补装组件与 ROM 原有应用"
+ui_print "- 19 项独立适配，保存后手动重启并解锁生效"
+ui_print "- 需先安装并启用 com.dalong.cnbridge 配套模块和推荐作用域"
+ui_print "- 补装应用删除仅针对主用户 0，保留数据和其他用户共享文件"
+ui_print "- 系统原有应用关闭时仅撤销适配，保留原包与数据"

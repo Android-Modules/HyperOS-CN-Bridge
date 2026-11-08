@@ -1,0 +1,13 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.dalong.cnbridge">
+    <uses-sdk android:minSdkVersion="36" android:targetSdkVersion="36" />
+    <application android:label="国内化按应用适配" android:allowBackup="false" android:hasCode="true">
+        <activity android:name="com.dalong.cnbridge.SetupActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <provider android:name="io.github.libxposed.service.XposedProvider" android:authorities="com.dalong.cnbridge.XposedService" android:exported="true" />
+        <provider android:name="com.dalong.cnbridge.ConfigProvider" android:authorities="com.dalong.cnbridge.config" android:exported="true" android:grantUriPermissions="false" />
+    </application>
+</manifest>

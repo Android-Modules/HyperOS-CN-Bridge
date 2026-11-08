@@ -37,5 +37,48 @@
     "etc/permissions/vendor.qti.hardware.data.connectionaidl-V1-java.xml": "1f1aabcee2403f5aa2892352704ef15f1d4c617daa07da3ddd68a257cd0586cb",
     "priv-app/MIUIContentExtension/MIUIContentExtension.apk": "06445e64bea77924dbff99f3b4fc3fb1f0ef89e8a9a8a0fa1a35e1b9a8433928",
     "priv-app/MIUIYellowPage/MIUIYellowPage.apk": "edb481726756796f87fb9757798d1a84cb88acc73835be315751229a7cd4f5b9"
+  },
+  "vendorCompatFiles": {
+    "etc/init/qesdk-manager.rc": "72f06fd61edadc11f90099bbca060373d9f463c584640223bf9f1e836c7bccf5",
+    "etc/seccomp_policy/qesdk.policy": "458589447d055323eeead9e7d440be4c51063ce952e2b942746e7c6d1fa148ea"
+  },
+  "archive": {
+    "repository": "Android-Modules/HyperOS-CN-Bridge",
+    "release": "rom-ishtar-OS3.0.308.0",
+    "asset": "ishtar-rom-inputs.tar.gz",
+    "sha256": "f863b65ddbd5858fd42a70efbc50d21cf4ab68635a87493acf324b088f6132fc",
+    "sizes": {
+      "app/HybridPlatform/HybridPlatform.apk": 64629984,
+      "app/MINextpay/MINextpay.apk": 13752234,
+      "app/MIUIAiasstService/MIUIAiasstService.apk": 23695187,
+      "app/PaymentService/PaymentService.apk": 25003736,
+      "app/UPTsmService/UPTsmService.apk": 24079202,
+      "app/VoiceAssistAndroidT/VoiceAssistAndroidT.apk": 170465221,
+      "app/VoiceTrigger/VoiceTrigger.apk": 42715822,
+      "etc/permissions/RemoteSimlock.xml": 355,
+      "etc/permissions/RemoteSimlockManager.xml": 449,
+      "etc/permissions/UimGba.xml": 327,
+      "etc/permissions/UimGbaManager.xml": 403,
+      "etc/permissions/UimService.xml": 387,
+      "etc/permissions/cn.google.services.xml": 265,
+      "etc/permissions/com.android.imsserviceentitlement.xml": 944,
+      "etc/permissions/com.android.settings.intelligence.xml": 1083,
+      "etc/permissions/com.qti.snapdragon.sdk.display.xml": 548,
+      "etc/permissions/extphonelib_product.xml": 1708,
+      "etc/permissions/ims_ext_common.xml": 1675,
+      "etc/permissions/lpa.xml": 325,
+      "etc/permissions/privapp-permissions-gms-cn-product.xml": 12829,
+      "etc/permissions/privapp-permissions-miui-product.xml": 1898,
+      "etc/permissions/privapp-permissions-product.xml": 20847,
+      "etc/permissions/qti_telephony_hidl_wrapper_prd.xml": 1709,
+      "etc/permissions/qti_telephony_utils_prd.xml": 1693,
+      "etc/permissions/split-permissions-google.xml": 288,
+      "etc/permissions/telephony_product_privapp-permissions-qti.xml": 1311,
+      "etc/permissions/vendor.qti.hardware.data.connection-V1.0-java.xml": 385,
+      "etc/permissions/vendor.qti.hardware.data.connection-V1.1-java.xml": 380,
+      "etc/permissions/vendor.qti.hardware.data.connectionaidl-V1-java.xml": 384,
+      "priv-app/MIUIContentExtension/MIUIContentExtension.apk": 9581680,
+      "priv-app/MIUIYellowPage/MIUIYellowPage.apk": 6453776
+    }
   }
 }

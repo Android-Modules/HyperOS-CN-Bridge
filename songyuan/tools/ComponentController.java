@@ -276,6 +276,19 @@ public final class ComponentController {
                     target.setReadable(true,false);
                 }
             }
+            if(nativeAddons && catalog.has("nativeFiles")) {
+                JSONArray files=catalog.getJSONArray("nativeFiles");
+                for(int i=0;i<files.length();i++) {
+                    JSONObject file=files.getJSONObject(i);if(!enabled(wanted,file.getString("feature")))continue;
+                    String path=file.getString("path");safe(mod,path);
+                    if(!path.startsWith("system/etc/permissions/"))throw new IOException("原系统权限配置路径无效");
+                    File target=new File(next,path.substring(7));target.getParentFile().mkdirs();
+                    ZipEntry entry=zip.getEntry(path);if(entry==null||entry.isDirectory())throw new IOException("安装源缺少原系统权限配置");
+                    try(InputStream in=zip.getInputStream(entry);OutputStream out=new FileOutputStream(target)){pipe(in,out);}
+                    if(!hash(target).equals(file.getString("sha256")))throw new IOException("原系统权限配置完整性校验失败");
+                    target.setReadable(true,false);
+                }
+            }
             if(!nativeAddons && !enabled(wanted,"clock")) {
                 JSONArray fallback=catalog.getJSONArray("clockFallback");
                 for(int i=0;i<fallback.length();i++) {
@@ -505,8 +518,77 @@ public final class ComponentController {
         }
         remove(temp);cmd("/system/bin/cmd","package","set-home-activity","--user","0",target+(cn?"/com.miui.home.launcher.Launcher":"/com.miui.home.launcher.Launcher"));
     }
+    String bootId() throws IOException {
+        return new String(Files.readAllBytes(new File("/proc/sys/kernel/random/boot_id").toPath()),"UTF-8").trim();
+    }
+    void appliedResult() throws Exception {
+        JSONObject result=new JSONObject().put("ok",true).put("phase","applied")
+                .put("message","配置已在本次启动生效").put("time",System.currentTimeMillis());
+        if(nativeAddons)result.put("bootId",bootId());
+        write(state("last-result.json"),result);
+    }
+    void verifyLoaded(JSONObject wanted) throws Exception {
+        if(nativeAddons) {
+            JSONArray compat=catalog.optJSONArray("vendorCompat");
+            if(compat!=null)for(int i=0;i<compat.length();i++) {
+                JSONObject file=compat.getJSONObject(i);String path=file.getString("path");
+                if(!(path.equals("/vendor/etc/init/qesdk-manager.rc")||path.equals("/vendor/etc/seccomp_policy/qesdk.policy")))
+                    throw new IOException("QESDK 配置路径无效");
+                File mounted=new File(path);
+                if(!mounted.isFile()||!hash(mounted).equals(file.getString("sha256")))
+                    throw new IOException("QESDK 配置未恢复，请检查 qesdk-compat.txt");
+            }
+            boolean cn=enabled(wanted,"cn_region");
+            String[][] expected={{"ro.product.mod_device",cn?"ishtar":"ishtar_elite_global"},
+                    {"ro.miui.region",cn?"CN":"HK"},{"ro.vendor.miui.region",cn?"CN":"HK"},
+                    {"ro.miui.cust_variant",cn?"cn":"hk"},{"ro.vendor.miui.cust_variant",cn?"cn":"hk"}};
+            for(String[] prop:expected)if(!prop[1].equals(cmd("/system/bin/getprop",prop[0])))
+                throw new IOException("地区配置未正确应用："+prop[0]);
+            File variant=new File("/data/miui/cust_variant");
+            if(variant.isFile()&&!(cn?"cn":"hk").equals(new String(Files.readAllBytes(variant.toPath()),"UTF-8").trim()))
+                throw new IOException("地区配置文件未正确挂载");
+        }
+        for(int i=0;i<units.length();i++) {
+            JSONObject u=units.getJSONObject(i);if(!active(u,wanted))continue;
+            if(cmd("/system/bin/pm","path",u.getString("package")).isEmpty())
+                throw new IOException("组件未被系统加载："+u.getString("package"));
+            // A store update can remain registered even when the module mount is
+            // missing. Verify the base APK, libraries and grants as well; .replace
+            // is a mount-manager marker and intentionally absent from /system.
+            if(nativeAddons) {
+                JSONArray files=u.getJSONArray("files");
+                for(int k=0;k<files.length();k++) {
+                    JSONObject file=files.getJSONObject(k);String path=file.getString("path");safe(mod,path);
+                    if(!path.startsWith("system/")||path.endsWith("/.replace"))continue;
+                    File mounted=new File("/"+path);
+                    if(!mounted.isFile()||!hash(mounted).equals(file.getString("sha256")))
+                        throw new IOException("组件文件未正确挂载："+u.getString("package")+" / "+mounted.getName());
+                }
+            }
+        }
+        if(nativeAddons && catalog.has("nativeFiles")) {
+            JSONArray files=catalog.getJSONArray("nativeFiles");
+            for(int i=0;i<files.length();i++) {
+                JSONObject file=files.getJSONObject(i);if(!enabled(wanted,file.getString("feature")))continue;
+                String path=file.getString("path");safe(mod,path);File mounted=new File("/"+path);
+                if(!path.startsWith("system/etc/permissions/")||!mounted.isFile()||!hash(mounted).equals(file.getString("sha256")))
+                    throw new IOException("原系统权限配置未正确挂载");
+            }
+        }
+    }
     void late() throws Exception {
-        if(!state("mounted.json").isFile()) return;
+        if(!state("mounted.json").isFile()) {
+            if(nativeAddons) {
+                // Do not clear an early failure or a still-pending transaction.
+                if(new File(mod,"next-job.json").isFile())throw new IOException("启动配置尚未切换，请查看运行详情后重试");
+                if(!state("applied.json").isFile())throw new IOException("已应用配置缺失，请重新安装完整模块");
+                if(!"RUNNING_UNLOCKED".equals(cmd("/system/bin/cmd","activity","get-started-user-state","0")))
+                    throw new IOException("等待解锁以检查启动配置");
+                verifyLoaded(config("applied.json"));
+                appliedResult();
+            }
+            return;
+        }
         JSONObject job=read(state("mounted.json")),wanted=job.getJSONObject("config"),before=job.getJSONObject("before");
         if(job.has("downloadSnapshot")) {
             File ready=state("downloads-ready-"+job.getLong("id")+".json");
@@ -562,10 +644,7 @@ public final class ComponentController {
                 if(!result.contains("Success"))throw new IOException("国际版时钟登记失败");
             }
         }
-        for(int i=0;i<units.length();i++) {
-            JSONObject u=units.getJSONObject(i);
-            if(active(u,wanted) && cmd("/system/bin/pm","path",u.getString("package")).isEmpty()) throw new IOException("组件未被系统加载："+u.getString("package"));
-        }
+        verifyLoaded(wanted);
         File previous=new File(mod,"previous-system");
         for(int i=0;i<units.length();i++) {
             JSONObject u=units.getJSONObject(i); boolean retain=!active(u,wanted)&&keep(u,wanted); JSONArray files=u.getJSONArray("files");
@@ -611,7 +690,7 @@ public final class ComponentController {
         if(previous.exists())remove(previous);
         write(state("applied.json"),wanted); Files.delete(state("mounted.json").toPath());
         Files.deleteIfExists(state("config-early.txt").toPath());
-        write(state("last-result.json"),new JSONObject().put("ok",true).put("phase","applied").put("message","配置已在本次启动生效").put("time",System.currentTimeMillis()));
+        appliedResult();
     }
     JSONObject status() throws Exception {
         JSONObject desired=config("desired.json"),applied=config("applied.json"),actual=new JSONObject();
@@ -658,9 +737,10 @@ public final class ComponentController {
             }
         }catch(Exception ignored){/* status remains available if Android icon rendering is unavailable */}
         boolean reboot=new File(mod,"next-job.json").isFile(),applying=state("mounted.json").isFile();
+        JSONObject result=state("last-result.json").isFile()?read(state("last-result.json")):new JSONObject();
         return new JSONObject().put("ok",true).put("desired",desired).put("applied",applied).put("actual",actual).put("icons",featureIcons)
                 .put("pending",reboot).put("applying",applying)
-                .put("result",state("last-result.json").isFile()?read(state("last-result.json")):new JSONObject())
+                .put("result",result).put("bootVerified",!nativeAddons||bootId().equals(result.optString("bootId")))
                 .put("version",catalog.getString("version")).put("sourceAvailable",state("source.zip").isFile());
     }
     public static void main(String[] args) {

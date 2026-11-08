@@ -1,6 +1,10 @@
 #!/system/bin/sh
 MODDIR=${0%/*}
 STATE=/data/adb/ishtar_cn
+mkdir -p "$STATE"
+chmod 700 "$STATE"
+sh "$MODDIR/qesdk-compat.sh" > "$STATE/qesdk-compat.txt" 2>&1 || log -t ishtar_cn "QESDK 配置修复失败，请检查 qesdk-compat.txt"
+chmod 600 "$STATE/qesdk-compat.txt"
 RESULT=$(sh "$MODDIR/config.sh" early 2>&1)
 if [ "$?" != 0 ]; then
   printf '%s\n' "$RESULT" > "$STATE/config-early.txt"

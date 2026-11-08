@@ -1,21 +1,62 @@
 <!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="light dark"><title>HyperOS CN Bridge · ishtar</title><link rel="stylesheet" href="style.css"><script src="app.js" defer></script></head>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>HyperOS CN Bridge · ishtar</title>
+<link rel="stylesheet" href="style.css"><script src="app.js" defer></script>
+</head>
 <body><main>
-<header><small>dalong · ishtar 专用预览版</small><h1>HyperOS CN Bridge</h1><p>EliteRomLite v4.05 · OS3.0.308.0.WMACNXM</p></header>
-<section class="notice"><strong>保留 Elite 原有应用</strong><p>本模块补齐 9 个官方组件并恢复 CN 判断。相册、账号、桌面、下载器等仍使用 ROM 原包；不代表已恢复所有官方国行功能。</p></section>
-<section><h2>运行状态 <button id="refresh" type="button">刷新</button></h2><p id="phase" role="status">正在读取模块…</p><p id="result"></p><small id="version"></small></section>
-<section><h2>模块管理的补全项</h2><p class="muted">默认全部开启。关闭默认删除展开文件；离线安装源和数据备份继续保留。</p><div id="features"></div><button id="all" type="button" disabled>全部启用</button></section>
-<section><h2>ROM 原有应用</h2><p class="muted">这些应用不由模块替换或删除，以下只显示安装情况。</p><div id="native"></div></section>
-<details><summary>更新、开关与适配范围</summary>
-<p>补装组件只接受同包名、同签名且适配当前系统的官方更新；商店更新优先运行。不能保证所有未来版本兼容。</p>
-<p>Elite 改签的原有应用可能无法接受官方更新。模块不会修改签名校验或包身份；相册国内功能、账号及云服务仍需实际业务验证。该版本官方 ROM 没有独立主题商店和 HyperGalleryPluginCn，不从 songyuan 混装这两个包。</p>
-<p>关闭补装组件也会处理受管理的商店更新。删除模式移除展开文件，保留模式将文件与更新放入 Root 私有目录；两者均保留数据备份。保存后请手动重启并解锁。</p>
-<p>当前存在其他用户或应用双开时，仅支持首次补装或保持配置升级。为避免遗漏其他用户的数据，后续组件切换会明确拒绝；不要删除双开数据来绕过限制。</p>
-<p>CN 地区开关会在 CN 与本 ROM 的 HK / ishtar_elite_global 之间切换，不改变硬件型号。系统已有的国内应用不会因此自动变成国际版。</p>
-<p>状态目录：/data/adb/ishtar_cn。需要卸载时先关闭全部补全项并重启，确认生效后再卸载；存在其他用户时请先保留模块并处理数据迁移。</p>
-</details>
-<footer><p id="dirty">未修改配置</p><button id="save" type="button" disabled>保存，手动重启生效</button></footer>
+<header class="page-header">
+  <div><p class="eyebrow">HYPEROS CN BRIDGE</p><h1>国内化管理</h1><p class="device">Xiaomi 13 Ultra <span>· ishtar</span></p></div>
+  <button id="refresh" class="icon-button" type="button" aria-label="刷新" disabled><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M19 11a7 7 0 0 0-12-5L4 9m16 6-3 3A7 7 0 0 1 5 13"/></svg></button>
+</header>
+<section id="status-card" class="status-card" data-state="loading" aria-label="运行状态">
+  <div class="status-top"><div><p class="status-label"><span class="status-dot"></span>运行状态</p><h2 id="phase" role="status">正在读取模块</h2><p id="enabled-count" class="status-caption">连接后显示当前配置</p></div>
+    <div class="status-emblem" aria-hidden="true"><svg class="status-symbol" viewBox="0 0 32 32">
+      <g class="status-ok"><circle cx="16" cy="16" r="12"/><path d="m10.5 16 3.8 3.8 7.2-7.6"/></g>
+      <g class="status-wait"><circle cx="16" cy="16" r="12"/><path d="M16 9v7l4.5 3"/></g>
+      <g class="status-working"><path d="M26 12a10.5 10.5 0 0 0-18-3L5 12m0-6v6h6M6 20a10.5 10.5 0 0 0 18 3l3-3m0 6v-6h-6"/></g>
+      <g class="status-failed"><circle cx="16" cy="16" r="12"/><path d="M16 9.5v8M16 22h.01"/></g>
+    </svg></div>
+  </div>
+  <details class="status-details"><summary>运行详情<span id="source-badge"></span></summary><p id="result">正在读取运行结果…</p><p id="version"></p></details>
+  <button id="retry-scope" class="secondary-button" type="button" hidden>授权后重新校验</button>
+</section>
+<div class="batch-actions"><button id="all" class="text-button" type="button" disabled>全部启用</button><button id="none" class="text-button" type="button" disabled>全部关闭</button></div>
+<nav class="tabs" role="tablist" aria-label="应用分类">
+  <button id="tab-features" role="tab" aria-selected="true" aria-controls="panel-features" type="button">补全组件 <span id="feature-count">—</span></button>
+  <button id="tab-native" role="tab" aria-selected="false" aria-controls="panel-native" tabindex="-1" type="button">系统应用 <span id="native-count">—</span></button>
+</nav>
+<section id="panel-features" class="panel" role="tabpanel" aria-labelledby="tab-features">
+  <div class="section-heading"><div><h2>按需开启</h2><p>每项独立适配 · 仅作用于主用户</p></div></div>
+  <div id="features" class="feature-grid" aria-busy="true"><p class="empty-state">正在读取组件清单…</p></div>
+  <p class="section-note">默认全部开启。关闭补装应用可选卸载或保留；保存后手动重启生效。</p>
+</section>
+<section id="panel-native" class="panel" role="tabpanel" aria-labelledby="tab-native" hidden>
+  <div class="section-heading"><div><h2>系统原有应用</h2><p>各应用独立开关 · 关闭后恢复 ROM 原样</p></div></div>
+  <div class="inline-note">只开日历时，CN 判断仅作用于日历进程。关闭其他项不会删除原生应用或数据；云同步、支付等服务仍有自身依赖。</div>
+  <div id="native" class="feature-grid"></div>
+</section>
+<details class="help-card"><summary>使用与更新说明<span class="chevron" aria-hidden="true"></span></summary><div class="help-content">
+  <h3>适配范围</h3><p>适用于 ishtar EliteRomLite v4.05 / OS3.0.308.0.WMACNXM。共 19 项独立开关，补齐 9 个官方 APK；使用 LSPosed 配套模块按应用适配，系统全局保留 ROM 原有 HK 配置。</p>
+  <h3>单独开启</h3><p>先点击全部关闭，再开启需要的一项，保存并手动重启。例如只开启日历，其他原生应用保持 ROM 原样。云同步、钱包和语音等完整业务可能依赖其他服务；开关不会自动开启依赖项。</p>
+  <h3>应用商店更新</h3><p>同包名、同签名的适配更新可优先运行，开关仍按包名选择作用域；新版应用若更换地区判断方式，需要重新验证。Elite 改签的原生应用可能无法接受官方更新，模块不绕过签名校验。</p>
+  <h3>关闭与删除</h3><p>原生应用关闭只撤销适配。补装应用选择删除时，从主用户 0 卸载并保留个人数据；选择保留时，应用继续安装但不进行地区适配。共享系统 APK 和离线安装源保留用于其他用户及重新开启，因此删除不等于释放全部文件空间。</p><p>卸载会清除 LSPosed 作用域。重新开启并重启后，请允许 LSPosed 的作用域请求通知，再点击“授权后重新校验”；未授权时不会显示已生效。</p>
+  <h3>双开与其他用户</h3><p>配置只控制主用户 0，不更改用户 10、应用双开等其他用户的安装状态，也不向这些进程注入适配。其他用户原有组件文件会保留。</p>
+  <h3>配套模块与卸载</h3><p>需要启用“国内化按应用适配”的 LSPosed 模块和全部推荐作用域，并允许该配套应用后台启动。配置只有在下次启动才切换。停用 KernelSU 模块并重启后，配套适配也会停止。</p><p>卸载前请检查其他用户是否仍使用补装应用并备份数据。状态与回退资料：<code>/data/adb/ishtar_cn</code>。</p>
+</div></details>
+<p class="signature">HyperOS CN Bridge <span>·</span> dalong <span>·</span> ishtar 预览版</p>
 </main>
-<dialog id="disable"><h2 id="disable-title"></h2><label><input type="radio" name="removal" value="delete" checked>删除展开文件（默认）</label><label><input type="radio" name="removal" value="keep">保留展开文件</label><p>保留个人数据备份。重启后生效；ROM 原有应用不受此开关管理。</p><button id="cancel" type="button">取消</button><button id="confirm" type="button">确认关闭</button></dialog>
+<footer class="action-dock"><div class="dock-copy"><p id="dirty" role="status">正在连接</p><p id="save-hint">保存后手动重启生效</p></div><button id="save" class="primary-button" type="button" aria-label="保存，手动重启生效" disabled>保存配置</button></footer>
+<dialog id="disable" aria-labelledby="disable-title" aria-describedby="disable-description">
+  <p class="eyebrow">组件设置</p><h2 id="disable-title"></h2><p id="disable-description" class="dialog-description">选择关闭后的文件处理方式，个人数据备份仍会保留。</p>
+  <label class="choice"><input type="radio" name="removal" value="delete" checked><span><strong>从主用户卸载 <small>默认</small></strong><span>移除主用户入口，保留数据与共享组件文件</span></span></label>
+  <label class="choice"><input type="radio" name="removal" value="keep"><span><strong>保留应用</strong><span>保留当前应用，只撤销国内地区适配</span></span></label>
+  <p class="dialog-note">此时只修改页面中的选择。点击保存并手动重启后生效。</p>
+  <div class="dialog-actions"><button id="cancel" class="secondary-button" type="button" autofocus>取消</button><button id="confirm" class="primary-button" type="button">确认关闭</button></div>
+</dialog>
+<dialog id="component-info" aria-labelledby="component-title"><div class="info-heading"><div id="component-icon"></div><button id="close-info" class="icon-button" type="button" aria-label="关闭详情" autofocus>×</button></div><h2 id="component-title"></h2><p id="component-description" class="dialog-description"></p><div id="component-packages" class="package-list"></div><div id="component-update" class="inline-note"></div></dialog>
 <div id="toast" role="alert" hidden></div>
 </body></html>

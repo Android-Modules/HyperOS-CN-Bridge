@@ -61,6 +61,7 @@ public final class ConfigProvider extends ContentProvider {
             String selected=Selection.prefix(prefs);
             JSONObject status = new JSONObject().put("api", current.getApiVersion())
                     .put("version", BuildInfo.VERSION_CODE)
+                    .put("aiSearchScopeReady", current.getScope().contains(AiSearchCompat.PACKAGE))
                     .put("scope", new JSONArray(current.getScope()))
                     .put("enabled", new JSONArray(prefs.getStringSet(selected+"enabled", Collections.emptySet())))
                     .put("revision", prefs.getString(selected+"revision", ""))

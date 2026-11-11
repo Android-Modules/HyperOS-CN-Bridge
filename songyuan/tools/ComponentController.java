@@ -692,6 +692,25 @@ public final class ComponentController {
         Files.deleteIfExists(state("config-early.txt").toPath());
         appliedResult();
     }
+    JSONObject aiSearchStatus() {
+        JSONObject status=new JSONObject();
+        try {
+            JSONObject policy=catalog.getJSONObject("aiSearch");
+            String paths=cmd("/system/bin/pm","path",policy.getString("package"));
+            if(!paths.startsWith("package:")||paths.contains("\n"))throw new IOException("AI 引擎版本需要重新适配");
+            if(!policy.getString("apkSHA256").equals(hash(new File(paths.substring(8)))))
+                throw new IOException("AI 引擎已更新，当前版本尚未适配");
+            status.put("supported",true);
+            String output=cmd("/system/bin/content","call","--user","0","--uri","content://com.dalong.cnbridge.config","--method","status");
+            Matcher encoded=Pattern.compile("encoded=([A-Za-z0-9+/=]+)").matcher(output);
+            if(!output.contains("ok=true")||!encoded.find())throw new IOException("请在 LSPosed 中启用国内化按应用适配与推荐作用域");
+            JSONObject remote=new JSONObject(new String(Base64.getDecoder().decode(encoded.group(1)),"UTF-8"));
+            if(remote.optInt("api")<102||remote.optInt("version")<policy.getInt("companionVersion")||!remote.optBoolean("aiSearchScopeReady"))
+                throw new IOException("请更新配套 APK 并启用推荐作用域");
+            status.put("ready",true).put("message","适配作用域已就绪 · 分析进度请到 AI 搜索查看");
+        }catch(Exception e){try{status.put("ready",false).put("message",e.getMessage());}catch(Exception ignored){}}
+        return status;
+    }
     JSONObject status() throws Exception {
         JSONObject desired=config("desired.json"),applied=config("applied.json"),actual=new JSONObject();
         JSONArray displayUnits=new JSONArray(),displayFeatures=new JSONArray();
@@ -738,10 +757,12 @@ public final class ComponentController {
         }catch(Exception ignored){/* status remains available if Android icon rendering is unavailable */}
         boolean reboot=new File(mod,"next-job.json").isFile(),applying=state("mounted.json").isFile();
         JSONObject result=state("last-result.json").isFile()?read(state("last-result.json")):new JSONObject();
-        return new JSONObject().put("ok",true).put("desired",desired).put("applied",applied).put("actual",actual).put("icons",featureIcons)
+        JSONObject response=new JSONObject().put("ok",true).put("desired",desired).put("applied",applied).put("actual",actual).put("icons",featureIcons)
                 .put("pending",reboot).put("applying",applying)
                 .put("result",result).put("bootVerified",!nativeAddons||bootId().equals(result.optString("bootId")))
                 .put("version",catalog.getString("version")).put("sourceAvailable",state("source.zip").isFile());
+        if(!nativeAddons&&catalog.has("aiSearch"))response.put("aiSearch",aiSearchStatus());
+        return response;
     }
     public static void main(String[] args) {
         try {

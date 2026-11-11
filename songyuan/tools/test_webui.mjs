@@ -21,6 +21,7 @@ const page=await context.newPage();const errors=[];page.on('pageerror',e=>errors
 await page.addInitScript(({catalog})=>{
  const defaults=Object.fromEntries(catalog.features.map(f=>[f.id,{enabled:true,remove:true}]));
  window.qa={calls:[],state:{ok:true,desired:defaults,applied:structuredClone(defaults),actual:{},pending:false,result:{ok:true,message:'配置已在本次启动生效'},version:catalog.version,sourceAvailable:true}};
+ window.qa.state.aiSearch={supported:true,ready:true,message:'适配作用域已就绪 · 分析进度请到 AI 搜索查看'};
  window.ksu={exec(command,callback){window.qa.calls.push(command);setTimeout(()=>{let result=window.qa.state;if(command.includes('config.sh save ')){result.desired=JSON.parse(atob(command.split(' ').at(-1)));result.pending=true;result.result={ok:true,message:'配置已保存，等待手动重启'};result={ok:true};}window[callback](0,JSON.stringify(result),'');},10);}};
 },{catalog});
 await page.goto('http://127.0.0.1:'+server.address().port);
@@ -51,6 +52,12 @@ await page.screenshot({path:path.join(root,'diagnostics/webui/components-light.p
 await page.getByRole('button',{name:'说明',exact:true}).click();await page.getByText('可以在应用商店更新吗？',{exact:true}).waitFor();
 assert.equal(await page.locator('#save-bar').isVisible(),false);
 await page.getByRole('button',{name:'状态',exact:true}).click();await page.getByText('已集成修复',{exact:true}).waitFor();
+await page.getByText('AI 搜索适配',{exact:true}).waitFor();
+await page.getByText('适配作用域已就绪 · 分析进度请到 AI 搜索查看',{exact:true}).waitFor();
+await page.evaluate(()=>{qa.state.aiSearch={supported:false,ready:false,message:'AI 引擎已更新，当前版本尚未适配'};});
+await page.getByRole('button',{name:'刷新状态',exact:true}).click();
+await page.getByText('AI 引擎已更新，当前版本尚未适配',{exact:true}).waitFor();
+assert.equal(await page.getByText('适配作用域已就绪 · 分析进度请到 AI 搜索查看',{exact:true}).count(),0);
 await page.getByRole('button',{name:'组件',exact:true}).click();
 await page.emulateMedia({colorScheme:'dark'});await page.screenshot({path:path.join(root,'diagnostics/webui/components-dark.png'),fullPage:true});
 // A reboot already committed must never be reported as waiting for reboot.
@@ -64,5 +71,5 @@ await page.getByRole('button',{name:'刷新状态',exact:true}).click();
 await page.getByText('已应用',{exact:true}).waitFor();
 await page.getByRole('button',{name:'组件',exact:true}).click();
 assert.equal(await page.locator('.app-icon img').count(),1);
-assert.deepEqual(errors,[]);console.log('PASS: catalog ownership, 19 defaults, details, cancel, delete/retain, save, manual reboot, update notes, navigation, mobile width, dark mode, failed/applied status, installed app icon.');
+assert.deepEqual(errors,[]);console.log('PASS: catalog ownership, 19 defaults, details, cancel, delete/retain, save, manual reboot, update notes, navigation, mobile width, dark mode, failed/applied status, installed app icon, AI scope/unsupported status.');
 }finally{await browser.close();server.close();}

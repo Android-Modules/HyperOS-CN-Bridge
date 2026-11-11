@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="SetupTheme" parent="android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/setup_background</item>
+        <item name="android:colorAccent">@color/setup_accent</item>
+        <item name="android:windowLightStatusBar">@bool/setup_light_system_bars</item>
+        <item name="android:windowLightNavigationBar">@bool/setup_light_system_bars</item>
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
+
+    <bool name="setup_light_system_bars">true</bool>
+
+    <style name="SetupSectionTitle" parent="android:style/TextAppearance.Material.Title">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/setup_title</item>
+    </style>
+
+    <style name="SetupStepTitle" parent="android:style/TextAppearance.Material.Title">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/setup_title</item>
+    </style>
+
+    <style name="SetupBody" parent="android:style/TextAppearance.Material.Body1">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/setup_body</item>
+    </style>
+
+    <style name="SetupStepNumber" parent="android:style/Widget.Material.TextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginEnd">12dp</item>
+        <item name="android:minWidth">28dp</item>
+        <item name="android:minHeight">28dp</item>
+        <item name="android:paddingHorizontal">7dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:textColor">@color/setup_accent</item>
+        <item name="android:background">@drawable/setup_step_background</item>
+    </style>
+</resources>

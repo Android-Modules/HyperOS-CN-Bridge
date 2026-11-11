@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Small Java-only LSPosed companion; pinned API 102 dependencies, no Gradle plugins."""
+"""Build the LSPosed companion with pinned API 102 dependencies and Android SDK tools."""
 from pathlib import Path
 import hashlib
 import json
@@ -44,18 +44,25 @@ def build():
     with tempfile.TemporaryDirectory(prefix="cnbridge-companion-") as tmp:
         temp = Path(tmp); classes = temp / "classes"; dex = temp / "dex"
         classes.mkdir(); dex.mkdir()
+        generated = temp / "generated"
+        generated.mkdir()
+        resources = temp / "resources.zip"
+        unsigned = temp / "unsigned.apk"
+        run([tools / "aapt2", "compile", "--dir", HERE / "res", "-o", resources])
+        run([tools / "aapt2", "link", "-I", android, "--manifest", HERE / "AndroidManifest.xml",
+             "--version-code", str(version["code"]), "--version-name", version["name"],
+             "--java", generated, "-o", unsigned, resources])
         jars = {n: dependency(n, temp) for n in PINS}
         info = temp / "BuildInfo.java"
         info.write_text("package com.dalong.cnbridge; final class BuildInfo { static final int VERSION_CODE = " + str(int(version["code"])) + "; }\n")
         run(["javac", "--release", "8", "-cp", os.pathsep.join(map(str, [android, *jars.values()])),
-             "-d", classes, info, *sorted((HERE / "src").rglob("*.java"))])
+             "-d", classes, info, *sorted(generated.rglob("*.java")),
+             *sorted((HERE / "src").rglob("*.java"))])
         run(["java", "-cp", tools / "lib/d8.jar", "com.android.tools.r8.D8", "--min-api", "36",
              "--lib", android, "--lib", jars["api"], "--output", dex,
              *sorted(classes.rglob("*.class")), jars["service"], jars["interface"]])
-        unsigned = temp / "unsigned.apk"
-        run([tools / "aapt2", "link", "-I", android, "--manifest", HERE / "AndroidManifest.xml",
-             "--version-code", str(version["code"]), "--version-name", version["name"], "-o", unsigned])
         source = (HERE / "src/com/dalong/cnbridge/Scope.java").read_text()
+        source += (HERE / "src/com/dalong/cnbridge/AiSearchCompat.java").read_text()
         packages = sorted(set(re.findall(r'"((?:com\.)[a-zA-Z0-9_.]+)"', source)))
         with zipfile.ZipFile(unsigned, "a", zipfile.ZIP_DEFLATED) as z:
             for p in sorted(dex.glob("*.dex")): z.write(p, p.name)

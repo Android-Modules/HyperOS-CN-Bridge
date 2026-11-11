@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">国内化按应用适配</string>
+    <string name="setup_summary">按应用启用国区功能。</string>
+    <string name="setup_steps">设置步骤</string>
+    <string name="setup_step_one">1</string>
+    <string name="setup_step_two">2</string>
+    <string name="setup_enable_title">在 LSPosed 中启用</string>
+    <string name="setup_enable_body">启用本模块并勾选推荐应用。</string>
+    <string name="setup_next_title">选择要适配的应用</string>
+    <string name="setup_next_body">打开 KernelSU 中的国行组件模块，在 WebUI 中选择应用。保存后重启手机。</string>
+    <string name="setup_scope_title">适配范围</string>
+    <string name="setup_scope_body">仅适配主用户中已选择的应用进程。</string>
+
+    <string name="songyuan_summary">为澎湃 AI 搜索启用本机配套模型。</string>
+    <string name="songyuan_enable_body">启用本模块并勾选推荐应用，首次启用后重启手机。</string>
+    <string name="songyuan_next_title">继续 AI 搜索分析</string>
+    <string name="songyuan_next_body">打开 AI 搜索并重新开始分析。首次切换模型需要重建部分索引，请接电并连接 Wi-Fi。</string>
+    <string name="songyuan_scope_body">适配会核对机型、系统和引擎 APK，仅为澎湃 AI 的四个搜索工作进程选择配套统一模型。温度、电量和下载条件由系统管理。</string>
+</resources>

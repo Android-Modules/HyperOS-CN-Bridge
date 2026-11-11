@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="setup_background">#111A17</color>
+    <color name="setup_surface">#1B2822</color>
+    <color name="setup_outline">#33453B</color>
+    <color name="setup_hero">#203D33</color>
+    <color name="setup_title">#EDF6EF</color>
+    <color name="setup_body">#B9CDC1</color>
+    <color name="setup_accent">#A1E2C5</color>
+    <color name="setup_step_background">#2C473B</color>
+</resources>

@@ -20,7 +20,13 @@ public final class Entry extends XposedModule {
         processName = param.getProcessName(); systemServer = param.isSystemServer();
     }
     @Override public void onPackageLoaded(PackageLoadedParam param) {
-        if (handled || systemServer || !param.isFirstPackage() || Process.myUid()/100000 != 0 || !Scope.ALL.contains(param.getPackageName())) return;
+        if (handled || systemServer || !param.isFirstPackage() || Process.myUid()/100000 != 0) return;
+        if (AiSearchCompat.PACKAGE.equals(param.getPackageName())) {
+            handled = true;
+            if (AiSearchCompat.worker(processName)) AiSearchCompat.install(this, param.getApplicationInfo(), processName);
+            return;
+        }
+        if (!Scope.ALL.contains(param.getPackageName())) return;
         handled = true;
         // A shared process cannot isolate a different package. Fail closed.
         String pkg = param.getPackageName();

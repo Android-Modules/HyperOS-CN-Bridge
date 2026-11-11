@@ -212,6 +212,19 @@ def main():
         (stage / "sources.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")
         version = re.search(r"^version=(\S+)", (stage / "module.prop").read_text(), re.M).group(1).removesuffix("-songyuan")
         catalog = {"schema": 1, "version": version, "features": feature_catalog(selected), "units": []}
+        companion = dist / "cn-bridge-companion.apk"
+        companion_version = json.loads((ROOT / "ishtar/companion/version.json").read_text())
+        cert = run([args.build_tools / "apksigner", "verify", "--print-certs", companion])
+        if "certificate SHA-256 digest: 42bdc277acad5eccfc85ecacb60ecbe7765527b33e6bcc444a0cc70c29221079" not in cert:
+            raise RuntimeError("Unexpected AI compatibility companion signer")
+        badge = run([args.build_tools / "aapt2", "dump", "badging", companion])
+        if not badge.startswith("package: name='com.dalong.cnbridge' ") or f"versionCode='{companion_version['code']}'" not in badge.splitlines()[0]:
+            raise RuntimeError("Build the current signed companion before packaging")
+        shutil.copyfile(companion, stage / "payload/cn-bridge-companion.apk")
+        policy = (ROOT / "ishtar/companion/src/com/dalong/cnbridge/AiSearchCompat.java").read_text()
+        catalog["aiSearch"] = dict(package="com.xiaomi.aicr", apkSHA256=re.search(r'APK_SHA256 = "([0-9a-f]{64})"', policy)[1],
+                                   companionVersion=companion_version["code"], companionSHA256=sha(companion))
+        manifest["companion"] = dict(file="payload/cn-bridge-companion.apk", sha256=sha(companion), **companion_version)
         # Global clock is a preload under /product/data-app, not a boot-scanned
         # system app. Keep its signed original as an explicit off-state fallback.
         clock_source = ROOT / "rom/global/data-app/MIUIDeskClockGlobal/MIUIDeskClockGlobal.apk"
@@ -284,6 +297,8 @@ def main():
             for file in catalog["clockFallback"]:
                 if hashlib.sha256(z.read(file["path"])).hexdigest() != file["sha256"]:
                     raise RuntimeError("Global clock fallback changed")
+            if hashlib.sha256(z.read(manifest["companion"]["file"])).hexdigest() != manifest["companion"]["sha256"]:
+                raise RuntimeError("AI companion changed during packaging")
         checksum = sha(output)
         (dist / (output.name + ".sha256")).write_text(f"{checksum}  {output.name}\n")
         (dist / f"sources-{mode}.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n")

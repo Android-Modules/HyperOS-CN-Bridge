@@ -1,6 +1,12 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.dalong.cnbridge">
     <uses-sdk android:minSdkVersion="36" android:targetSdkVersion="36" />
-    <application android:label="国内化按应用适配" android:allowBackup="false" android:hasCode="true">
+    <application
+        android:label="@string/app_name"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:theme="@style/SetupTheme"
+        android:allowBackup="false"
+        android:hasCode="true">
         <activity android:name="com.dalong.cnbridge.SetupActivity" android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

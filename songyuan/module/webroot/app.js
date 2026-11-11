@@ -69,6 +69,7 @@ function showDetail(f){
 function renderStatus(){
   const box=$('runtime-status');box.replaceChildren();
   const entries=[['模块版本',status.version],['适用系统','OS3.0.306.0.WGNMIXM'],['配置状态',phase()],['本地安装源',status.sourceAvailable?'可用 · 支持离线重新启用':'缺失，请重新安装模块'],['最近结果',status.result.message||'尚无记录']];
+  if(status.aiSearch)entries.push(['AI 搜索适配',status.aiSearch.message||'请检查 LSPosed 配套模块']);
   for(const [label,value]of entries){const line=el('div','status-line');line.append(el('span','',label),el('strong','',value));box.append(line);}
 }
 async function refresh(){try{const result=await bridge('status');status=result;draft=clone(result.desired);render();}catch(e){toast(e.message);$('summary-title').textContent='无法连接模块';$('summary-sub').textContent=e.message;}}

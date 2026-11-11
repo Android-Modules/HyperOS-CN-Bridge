@@ -9,14 +9,23 @@
 
 | 配置 | 版本 | 适用系统 | 方式 |
 | --- | --- | --- | --- |
-| songyuan | 3.1.2-songyuan | 官方国际版 OS3.0.306.0.WGNMIXM | 同版本国行原签名 APK、共享地区配置 |
-| [ishtar](ishtar/README.md) | 3.3.1-ishtar + 配套 APK 1.0.0 | 小米 13 Ultra EliteRomLite v4.05 / OS3.0.308.0.WMACNXM | 保留 ROM 原包，19 项按进程独立适配，补装 9 个官方组件 |
+| [songyuan](songyuan/README.md) | 3.1.3-songyuan + 配套 APK 1.0.2 | 官方国际版 OS3.0.306.0.WGNMIXM | 同版本国行原签名 APK、共享地区配置，AI 搜索后台模型适配 |
+| [ishtar](ishtar/README.md) | 3.3.1-ishtar + 配套 APK 1.0.2 | 小米 13 Ultra EliteRomLite v4.05 / OS3.0.308.0.WMACNXM | 保留 ROM 原包，19 项按进程独立适配，补装 9 个官方组件 |
 
 ishtar 已包含相册 Google 备份入口转小米云同步、同步适配器登记和 modemManager 循环退出修复。两个配置的实现与验证范围不同，具体限制见各自文档。
 
-项目源自 HyperOS3EULocalization，在此基础上实现官方国际版适配、依赖修复及组件管理。以下完整转换说明针对 songyuan；ishtar 的安装需要额外配套 APK 与 LSPosed，步骤见独立文档。
+项目源自 HyperOS3EULocalization，在此基础上实现官方国际版适配、依赖修复及组件管理。以下完整转换说明针对 songyuan。songyuan 的 AI 搜索修复和 ishtar 的按应用适配需要支持 API 102 的 LSPosed，两种构建产物均附带同签名配套 APK。
 
-> 当前仅验证下表中的系统组合。安装器会检查机型和版本，不适用于所有 HyperOS 3 设备；不要修改检查条件后跨机型刷入。
+> 当前已验证上表列出的机型与系统组合。请按机型选择安装包，安装器会核对机型和系统版本。
+
+## 真机界面
+
+在 KernelSU 的模块卡片打开 WebUI，选择所需组件。保存配置后手动重启，再回到 WebUI 查看应用结果。配套应用会按机型显示 LSPosed 启用步骤和适配范围。
+
+| songyuan · 国行组件 | ishtar · 国内化管理 | LSPosed 配套应用 1.0.2 |
+| --- | --- | --- |
+| <img src="assets/readme/songyuan-webui.png" width="220" alt="songyuan 真机 WebUI，19 个组件开关和保存配置入口"> | <img src="assets/readme/ishtar-webui.png" width="220" alt="ishtar 真机 WebUI，运行状态、补全组件和系统应用"> | <img src="assets/readme/companion-setup.png" width="220" alt="新版配套应用首页，显示图标、启用步骤和 AI 搜索适配范围"> |
+| 管理国行应用，关闭时可选删除或保留组件文件。 | 分开管理补全组件和 ROM 自带应用，按应用启用国区适配。 | songyuan 用于 AI 搜索模型适配，ishtar 用于应用级地区适配。 |
 
 ## 适配与运行要求
 
@@ -26,7 +35,7 @@ ishtar 已包含相册 Google 备份入口转小米云同步、同步适配器�
 | 目标系统 | 官方国际版 `OS3.0.306.0.WGNMIXM` |
 | Android / 架构 | Android 16 / SDK 36 / ARM64 |
 | 国行组件来源 | 同机型 `OS3.0.306.0.WGNCNXM` |
-| 模块版本 / ID | `3.1.2-songyuan` / `songyuan_cn_complete` |
+| 模块版本 / ID | `3.1.3-songyuan` / `songyuan_cn_complete` |
 | 已验证 Root 环境 | KernelSU 3.3.1；3.1.0 使用 `magic_mount_rs` 4.0.11-930，3.1.1 使用 4.1.12-959 |
 | SELinux | Enforcing |
 | 用户范围 | 主用户 `0`；存在应用双开或其他用户时只允许保持配置升级，组件数据切换仍限定单用户 |
@@ -66,10 +75,11 @@ KernelSU 需要可用的系统文件挂载能力。真机验证使用上述挂�
 ## 下载和安装
 
 1. 在 [Actions](https://github.com/Android-Modules/HyperOS-CN-Bridge/actions/workflows/release.yml) 打开一次 **成功的** `Build Device Modules` 运行，按机型下载 `HyperOS-CN-Bridge-songyuan-运行编号` 或 `HyperOS-CN-Bridge-ishtar-运行编号` Artifact。下载 Artifact 需要登录 GitHub，保留期为 30 天。
-2. 解压 Artifact，得到真正的模块 `songyuan-cn-complete-OS3.0.306.0.zip`、对应 `.sha256`、`sources-complete.json` 和 `build-info.json`。**不要把 Artifact 外层 ZIP 或 ROM 构建资源当模块安装。**
+2. 解压 Artifact，按机型取出 `songyuan-cn-complete-OS3.0.306.0.zip` 或 `ishtar-cn-addons-OS3.0.308.0.zip`。同一 Artifact 也包含配套 APK、校验文件和 `build-info.json`。在 KernelSU 中选择内层模块 ZIP。
 3. 确认机型、系统版本及挂载能力符合上表，并备份重要应用数据。涉及 NFC 身份和系统应用切换，应保留可用的模块恢复途径。
 4. 在 KernelSU 管理器内选择安装模块 ZIP，检查安装结果，然后手动重启并解锁主用户。
 5. 打开模块卡片的 WebUI；也可使用模块操作按钮打开。状态页应显示配置已应用，核对实际组件加载情况。
+6. AI 搜索另需在 LSPosed 中启用“国内化按应用适配”与推荐作用域，然后重启。WebUI 状态页会检查配套版本及 AI 搜索作用域；此检查不代表索引已经完成，分析进度请到系统 AI 搜索页面查看。
 
 校验下载文件：
 
@@ -117,6 +127,7 @@ WebUI 关闭组件时会同时处理受管理的 `/data/app` 更新层，避免�
 | 云备份显示本机不可用 | 使用同 ROM 国行桌面及对应命名空间，切换时迁移桌面布局 |
 | 相册不能同步 | 修复账号访问权限、AppOps 和系统同步注册；成功后不持续覆盖用户的同步选择 |
 | 相册同步后缩略图空白、原图无法写入 | 3.1.1 按当前相册 UID 修复自身外置目录中的旧属主，保留内容、组、模式和 SELinux 标签，每次解锁启动检查并先备份权限记录 |
+| AI 搜索本地分析停在约 88% | 3.1.3 配套 APK 仅在四个 AI 搜索后台进程选择该 ROM 自带的统一模型，避免请求缺失的国内 BERT / CLIP 模型；保留国内搜索界面与其他应用的地区判断。仅适配已校验的 AICR 3.63.1，更新后哈希变化则跳过，需要重新验证 |
 | 查找设备定位没有结果 | 首次启用云服务时修复已有官方国行查找设备的运行时定位权限与 UID AppOps，后续保留用户权限选择 |
 | 已重启仍显示等待重启 | 按待处理任务、启动提交和最终结果区分状态 |
 | 关闭国内时钟后时钟消失 | 提供同签名国际版回退 APK，并登记应用更新以保留可扫描入口及原闹钟 |
@@ -161,6 +172,8 @@ gh release download rom-songyuan-OS3.0.306.0 \
 python3 songyuan/tools/rom_inputs.py extract
 
 # 使用本机实际安装路径设置 JAVA_HOME 和 ANDROID_HOME，然后构建。
+# CNBRIDGE_KEYSTORE 指向现有发布密钥；不同密钥不能更新手机上的配套 APK。
+python3 ishtar/companion/build.py
 python3 songyuan/tools/build.py
 ```
 
@@ -172,6 +185,7 @@ python3 songyuan/tools/build.py
 | --- | --- |
 | `songyuan-cn-complete-OS3.0.306.0.zip` | 可安装的完整模块 |
 | 同名 `.zip.sha256` | 本次构建校验值 |
+| `cn-bridge-companion.apk` 及 `.sha256` | 同签名 LSPosed API 102 配套应用，模块 ZIP 内也包含一份 |
 | `sources-complete.json` | 每个 APK 的包名、版本、原始证书和文件哈希 |
 | `build-info.json` | Actions 附加的提交、输入哈希和工作流地址 |
 

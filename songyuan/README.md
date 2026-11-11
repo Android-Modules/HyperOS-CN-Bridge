@@ -8,7 +8,7 @@
 
 原仓库主要面向 xiaomi.eu；本目录为官方国际版单独构建。它覆盖截图中的全部 14 个包，补充云服务、云同步、云备份、小米账号、日历、时钟、主题和相册，并包含云恢复所需的国行桌面、内容捕捉、语音唤醒、国区服务框架、SIM 激活、主题商店、相册插件及必要依赖，共 31 个包、41 个 APK。国区服务框架采用 ROM 原有的完整 split APK 集合。
 
-构建：`python3 songyuan/tools/build.py`。默认输入为仓库本地 `rom/cn/`，包括国行 product、system、system_ext 分区的目标应用、权限清单及下载服务的 4 个外置原生库。`--without-wallet` 只用于首次基础与云服务的隔离验证。
+当前模块为 **3.1.3-songyuan**，配套应用为 **1.0.2**。构建前设置 `CNBRIDGE_KEYSTORE` 指向原发布密钥，先运行 `python3 ishtar/companion/build.py`，再运行 `python3 songyuan/tools/build.py`。默认输入为仓库本地 `rom/cn/`，包括国行 product、system、system_ext 分区的目标应用、权限清单及下载服务的 4 个外置原生库。`--without-wallet` 只用于首次基础与云服务的隔离验证。
 
 产物在 `dist/`，包含 ZIP、SHA256 和逐 APK 的来源清单。构建会验证每个 APK 在 Android 16 上的签名、包名和证书，并提取需要外置的 ARM64 库。短信、黄页、银联服务分别保留它们各自的原始证书。
 
@@ -21,6 +21,18 @@
 故诗声音模块原布局存在 `system/product` 符号链接与重复 `system/media`，会让 Magic Mount 本轮跳过整个 product 挂载。`python3 songyuan/tools/fix_audio_layout.py` 从备份重新打包成单一 `system/product/media` 布局，262 个音频逐字节保留；不需要更换挂载元模块或给普通应用授予 Root。
 
 `ro.product.mod_device=songyuan` 用于国行功能判断。通过启动时的文件 bind 提供 `cn`，并在 post-fs-data 与启动完成后重新应用 CN 属性；原始地区文件保留，停用并重启即撤销挂载。系统版本号、OTA 指纹、全局机型均保持 ROM 原值。
+
+## AI 搜索本地分析
+
+3.1.3 在安装时更新同签名的 `com.dalong.cnbridge` 配套应用。需要在支持 **libxposed API 102** 的 LSPosed 中启用“国内化按应用适配”及推荐作用域，然后重启。该功能独立于 19 项组件开关；系统仍采用 CN 地区时自动适配，恢复原有 Global 地区判断后跳过。
+
+使用 Thanox 等后台管理工具时，需允许配套应用 `com.dalong.cnbridge` 启动和后台运行，否则 WebUI 无法读取配套状态。AI 引擎 `com.xiaomi.aicr` 也需要运行分析任务的后台权限；不要在分析过程中强停这些进程。按需为必要应用设置例外。
+
+此 ROM 的 AICR 3.63.1 在国内分支请求未配套的 BERT / CLIP 模型，导致语义索引失败，旧进度仍可能显示约 88%。适配仅在 `com.xiaomi.aicr` 的 `:searchDataService`、`:searchService`、`:bertAlgo`、`:clipAlgo` 四个进程内提供 `songyuan_global` 的模型选择标识，使用该机自带的 `ai_search_qcom_qnn_8850` 统一模型。AI 搜索设置界面和其他应用继续使用国区判断，不替换 AICR、AIService 或 ROM APK，不修改进度、温控和电量条件。
+
+适配限定 songyuan、SM8850、OS3.0.306.0.WGNMIXM 和 AICR APK SHA256 `f1f7314612528e12c6dcf1e9f13dfb86dda0bde1c6bf9154d114051c199f4d90`。其他系统或 APK 更新后跳过，需重新适配；不能保证后续应用商店版本兼容。WebUI 状态页检查 APK 版本、配套版本与 LSPosed 作用域，不将“作用域就绪”当作“模型和索引已完成”。
+
+首次切换模型分支需要重新分析。请连接 Wi-Fi、接电并按系统页面提示开始分析；几千张照片的文字识别可能耗时较长，进度也可能重新计算。不要通过修改索引数据库或进度强行标记完成。模型初始化、特征计算与完整索引完成的实测范围分别记在 [VALIDATION.md](VALIDATION.md)。
 
 ## WebUI（3.1 系列）
 

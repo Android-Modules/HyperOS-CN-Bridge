@@ -67,8 +67,7 @@ jobs:
           gh release download "$INPUT_RELEASE" --repo "$INPUT_REPOSITORY" --pattern "$INPUT_ASSET" --dir "$RUNNER_TEMP/rom-inputs"
           python3 ${{ matrix.device }}/tools/rom_inputs.py extract --archive "$RUNNER_TEMP/rom-inputs/$INPUT_ASSET"
 
-      - name: Build signed ishtar companion
-        if: matrix.device == 'ishtar'
+      - name: Build signed companion
         env:
           CNBRIDGE_SIGNING_KEY: ${{ secrets.CNBRIDGE_SIGNING_KEY }}
           CNBRIDGE_KEYSTORE: ${{ runner.temp }}/cnbridge-signing.jks
@@ -86,7 +85,7 @@ jobs:
           python3 ishtar/companion/build.py
 
       - name: Remove temporary signing key
-        if: always() && matrix.device == 'ishtar'
+        if: always()
         run: python3 -c "from pathlib import Path; Path('${{ runner.temp }}/cnbridge-signing.jks').unlink(missing_ok=True)"
 
       - name: Build full module and verify APK signatures and hashes
@@ -112,8 +111,7 @@ jobs:
           record = {'device': device, 'commit': os.environ['BUILD_SHA'], 'run': os.environ['BUILD_URL'],
                     'romArchiveSHA256': archive['sha256'], 'source': lock['source'],
                     'module': Path(f'{device}/module/module.prop').read_text()}
-          if device == 'ishtar':
-              record['companion'] = json.loads(Path('ishtar/companion/version.json').read_text())
+          record['companion'] = json.loads(Path('ishtar/companion/version.json').read_text())
           Path('dist/build-info.json').write_text(json.dumps(record, indent=2) + '\n')
           with open(os.environ['GITHUB_STEP_SUMMARY'], 'a') as out:
               print(f'### HyperOS CN Bridge — {device}\n', file=out)
